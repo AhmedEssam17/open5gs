@@ -21,6 +21,7 @@
 
 ogs_sbi_request_t *smf_nudm_sdm_build_get(smf_sess_t *sess, void *data)
 {
+    ogs_info("*****nudm-build.c: smf_nudm_sdm_build_get()*****");
     smf_ue_t *smf_ue = NULL;
     ogs_sbi_message_t message;
     ogs_sbi_request_t *request = NULL;
@@ -53,6 +54,7 @@ ogs_sbi_request_t *smf_nudm_sdm_build_get(smf_sess_t *sess, void *data)
 ogs_sbi_request_t *smf_nudm_uecm_build_registration(
         smf_sess_t *sess, void *data)
 {
+    ogs_info("*****nudm-build.c: smf_nudm_uecm_build_registration()*****");
     smf_ue_t *smf_ue = NULL;
     ogs_sbi_message_t message;
     ogs_sbi_request_t *request = NULL;
@@ -117,6 +119,7 @@ end:
 ogs_sbi_request_t *smf_nudm_uecm_build_deregistration(
         smf_sess_t *sess, void *data)
 {
+    ogs_info("*****nudm-build.c: smf_nudm_uecm_build_deregistration()*****");
     smf_ue_t *smf_ue = NULL;
     ogs_sbi_message_t message;
     ogs_sbi_request_t *request = NULL;

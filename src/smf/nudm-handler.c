@@ -23,6 +23,7 @@
 bool smf_nudm_sdm_handle_get(smf_sess_t *sess, ogs_sbi_stream_t *stream,
         ogs_sbi_message_t *recvmsg)
 {
+    ogs_info("*****nudm-handler.c: smf_nudm_sdm_handle_get()*****");
     int r;
     char *strerror = NULL;
     uint8_t cause_value = 0;
@@ -364,6 +365,19 @@ bool smf_nudm_sdm_handle_get(smf_sess_t *sess, ogs_sbi_stream_t *stream,
             smf_npcf_smpolicycontrol_build_create, sess, stream, 0, NULL);
     ogs_expect(r == OGS_OK);
     ogs_assert(r != OGS_ERROR);
+
+    // ogs_info("*****nudm-handler.c: smf_nudm_sdm_handle_get(): >>> Before discover only");
+    // r = smf_sbi_discover_only(sess, stream, OGS_SBI_SERVICE_TYPE_NPCF_SMPOLICYCONTROL);
+    // ogs_info("*****nudm-handler.c: smf_nudm_sdm_handle_get(): >> r = %d*****", r);
+
+    OpenAPI_charging_data_t OpenAPI_charging_data;
+
+    // TODO: discover and send CHF
+    ogs_info("*****nudm-handler.c: smf_nudm_sdm_handle_get(): >>> Before discover only");
+    r = smf_sbi_discover_only(sess, stream, OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING);
+    ogs_info("*****nudm-handler.c: smf_nudm_sdm_handle_get(): >> r = %d*****", r);
+    // ogs_expect(r == OGS_OK);
+    // ogs_assert(r != OGS_ERROR);
 
     return true;
 

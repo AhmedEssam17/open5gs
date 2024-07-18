@@ -198,10 +198,6 @@ int smf_sbi_discover_and_send(
         }
     }
 
-    if (target_nf_type == OpenAPI_nf_type_CHF) {
-        ogs_info("******Discovered CHF******");
-    }
-
     xact = ogs_sbi_xact_add(
             sess->id, &sess->sbi, service_type, discovery_option,
             (ogs_sbi_build_f)build, sess, data);

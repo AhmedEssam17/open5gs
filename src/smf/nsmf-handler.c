@@ -26,8 +26,6 @@
 bool smf_nsmf_handle_create_sm_context(
     smf_sess_t *sess, ogs_sbi_stream_t *stream, ogs_sbi_message_t *message)
 {
-    ogs_info("*****nsmf-handler.c: smf_nsmf_handle_create_sm_context()*****");
-    bool rc;
     bool rc;
     smf_ue_t *smf_ue = NULL;
     char *type = NULL;
@@ -761,7 +759,11 @@ bool smf_nsmf_handle_update_sm_context(
 
         } else if (PCF_SM_POLICY_ASSOCIATED(sess)) {
             smf_npcf_smpolicycontrol_param_t param;
-
+        /*
+        ****************************************************************************************************************************************************************
+                                                            Handle Delete / Deregisteration for PCF
+        ****************************************************************************************************************************************************************
+        */
             memset(&param, 0, sizeof(param));
 
             param.ue_location = true;
@@ -775,6 +777,11 @@ bool smf_nsmf_handle_update_sm_context(
             ogs_expect(r == OGS_OK);
             ogs_assert(r != OGS_ERROR);
         } else {
+        /*
+        ****************************************************************************************************************************************************************
+                                                            Handle Delete / Deregisteration for UDM
+        ****************************************************************************************************************************************************************
+        */
             ogs_warn("[%s:%d] No PolicyAssociationId. Forcibly remove SESSION",
                     smf_ue->supi, sess->psi);
             r = smf_sbi_discover_and_send(
@@ -867,6 +874,11 @@ bool smf_nsmf_handle_release_sm_context(
     }
 
     if (PCF_SM_POLICY_ASSOCIATED(sess)) {
+        /*
+        ****************************************************************************************************************************************************************
+                                                            Handle Delete / Deregisteration for PCF
+        ****************************************************************************************************************************************************************
+        */
         r = smf_sbi_discover_and_send(
                 OGS_SBI_SERVICE_TYPE_NPCF_SMPOLICYCONTROL, NULL,
                 smf_npcf_smpolicycontrol_build_delete,
@@ -875,6 +887,11 @@ bool smf_nsmf_handle_release_sm_context(
         ogs_expect(r == OGS_OK);
         ogs_assert(r != OGS_ERROR);
     } else {
+        /*
+        ****************************************************************************************************************************************************************
+                                                            Handle Delete / Deregisteration for UDM
+        ****************************************************************************************************************************************************************
+        */
         ogs_warn("[%s:%d] No PolicyAssociationId. Forcibly remove SESSION",
                 smf_ue->supi, sess->psi);
         r = smf_sbi_discover_and_send(
