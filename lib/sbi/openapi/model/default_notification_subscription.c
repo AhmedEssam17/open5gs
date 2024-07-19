@@ -5,7 +5,7 @@
 #include "default_notification_subscription.h"
 
 OpenAPI_default_notification_subscription_t *OpenAPI_default_notification_subscription_create(
-    OpenAPI_notification_type_e notification_type,
+    OpenAPI_notification_type_any_of_e notification_type,
     char *callback_uri,
     OpenAPI_n1_message_class_e n1_message_class,
     OpenAPI_n2_information_class_e n2_information_class,
@@ -86,11 +86,11 @@ cJSON *OpenAPI_default_notification_subscription_convertToJSON(OpenAPI_default_n
     }
 
     item = cJSON_CreateObject();
-    if (default_notification_subscription->notification_type == OpenAPI_notification_type_NULL) {
+    if (default_notification_subscription->notification_type == OpenAPI_notification_type_any_of_NULL) {
         ogs_error("OpenAPI_default_notification_subscription_convertToJSON() failed [notification_type]");
         return NULL;
     }
-    if (cJSON_AddStringToObject(item, "notificationType", OpenAPI_notification_type_ToString(default_notification_subscription->notification_type)) == NULL) {
+    if (cJSON_AddStringToObject(item, "notificationType", OpenAPI_notification_type_any_of_ToString(default_notification_subscription->notification_type)) == NULL) {
         ogs_error("OpenAPI_default_notification_subscription_convertToJSON() failed [notification_type]");
         goto end;
     }
@@ -192,7 +192,7 @@ OpenAPI_default_notification_subscription_t *OpenAPI_default_notification_subscr
     OpenAPI_default_notification_subscription_t *default_notification_subscription_local_var = NULL;
     OpenAPI_lnode_t *node = NULL;
     cJSON *notification_type = NULL;
-    OpenAPI_notification_type_e notification_typeVariable = 0;
+    OpenAPI_notification_type_any_of_e notification_typeVariable = 0;
     cJSON *callback_uri = NULL;
     cJSON *n1_message_class = NULL;
     OpenAPI_n1_message_class_e n1_message_classVariable = 0;
@@ -214,7 +214,7 @@ OpenAPI_default_notification_subscription_t *OpenAPI_default_notification_subscr
         ogs_error("OpenAPI_default_notification_subscription_parseFromJSON() failed [notification_type]");
         goto end;
     }
-    notification_typeVariable = OpenAPI_notification_type_FromString(notification_type->valuestring);
+    notification_typeVariable = OpenAPI_notification_type_any_of_FromString(notification_type->valuestring);
 
     callback_uri = cJSON_GetObjectItemCaseSensitive(default_notification_subscriptionJSON, "callbackUri");
     if (!callback_uri) {

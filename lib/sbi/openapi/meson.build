@@ -286,6 +286,7 @@ libsbi_openapi_sources = files('''
     model/dnn_mb_smf_info_item.c
     model/dnn_route_selection_descriptor.c
     model/dnn_selection_mode.c
+    model/dnn_selection_mode_any_of.c
     model/dnn_smf_info_item.c
     model/dnn_smf_info_item_dnai_list_inner.c
     model/dnn_snssai_information.c
@@ -921,6 +922,7 @@ libsbi_openapi_sources = files('''
     model/reachability_for_sms_configuration_any_of.c
     model/reachability_for_sms_configuration.c
     model/redirect_address_type.c
+    model/redirect_address_type_any_of.c
     model/redirect_information.c
     model/redirect_response.c
     model/red_trans_exp_ordering_criterion_any_of.c
@@ -1367,6 +1369,188 @@ libsbi_openapi_sources = files('''
     model/wlan_performance_req.c
     model/wlan_per_ss_id_performance_info.c
     model/wlan_per_ts_performance_info.c
+
+    model/_3_gppps_data_off_status_any_of.c
+	model/_chargingdata__charging_data_ref__update_post_400_response.c
+	model/_chargingdata_post_400_response.c
+	model/access_network_info_change.c
+	model/access_transfer_information.c
+	model/access_transfer_type.c
+	model/access_transfer_type_any_of.c
+	model/announcement_information.c
+	model/announcement_privacy_indicator.c
+	model/announcement_privacy_indicator_any_of.c
+	model/api_direction.c
+	model/api_direction_any_of.c
+	model/called_identity_change.c
+	model/charging_characteristics_selection_mode.c
+	model/charging_characteristics_selection_mode_any_of.c
+	model/charging_data_request.c
+	model/charging_data_response.c
+	model/charging_notify_request.c
+	model/charging_notify_response.c
+	model/class_identifier.c
+	model/class_identifier_any_of.c
+	model/coverage_info.c
+	model/delivery_report_requested.c
+	model/delivery_report_requested_any_of.c
+	model/direct_discovery_model.c
+	model/direct_discovery_model_any_of.c
+	model/early_media_description.c
+	model/eas_deployment_charging_information.c
+	model/edge_infrastructure_usage_charging_information.c
+	model/failure_handling.c
+	model/failure_handling_any_of.c
+	model/final_unit_indication.c
+	model/ims_address.c
+	model/ims_charging_information.c
+	model/ims_node_functionality.c
+	model/ims_session_priority.c
+	model/ims_session_priority_any_of.c
+	model/inter_operator_identifier.c
+	model/interface_type.c
+	model/interface_type_any_of.c
+	model/invocation_result.c
+	model/isup_cause.c
+	model/location_reporting_charging_information.c
+	model/management_operation.c
+	model/management_operation_any_of.c
+	model/management_operation_status.c
+	model/management_operation_status_any_of.c
+	model/mapdu_session_information.c
+	model/media_initiator_flag.c
+	model/media_initiator_flag_any_of.c
+	model/message_body.c
+	model/message_class.c
+	model/mico_mode_indication.c
+	model/mico_mode_indication_any_of.c
+	model/mm_tel_charging_information.c
+	model/model_3_gppps_data_off_status.c
+	model/model_5_glan_type_service.c
+	model/multiple_qf_icontainer.c
+	model/multiple_unit_information.c
+	model/multiple_unit_usage.c
+	model/n2_connection_charging_information.c
+	model/nef_charging_information.c
+	model/network_slicing_info.c
+	model/nf_identification.c
+	model/nni_information.c
+	model/nni_relationship_mode.c
+	model/nni_relationship_mode_any_of.c
+	model/nni_session_direction.c
+	model/nni_session_direction_any_of.c
+	model/nni_type.c
+	model/nni_type_any_of.c
+	model/node_functionality.c
+	model/node_functionality_any_of.c
+	model/notification_type_any_of.c
+	model/nsm_charging_information.c
+	model/nspa_charging_information.c
+	model/nspa_container_information.c
+	model/nssai_map.c
+	model/one_time_event_type.c
+	model/one_time_event_type_any_of.c
+	model/originator_info.c
+	model/originator_party_type.c
+	model/originator_party_type_any_of.c
+	model/participant_action_type.c
+	model/participant_action_type_any_of.c
+	model/pc5_container_information.c
+	model/pc5_data_container.c
+	model/pdu_address.c
+	model/pdu_container_information.c
+	model/pdu_session_charging_information.c
+	model/pdu_session_information.c
+	model/pfi_container_information.c
+	model/play_to_party.c
+	model/play_to_party_any_of.c
+	model/problem_details.c
+	model/prose_charging_information.c
+	model/prose_event_type.c
+	model/prose_event_type_any_of.c
+	model/prose_functionality.c
+	model/prose_functionality_any_of.c
+	model/ps_cell_information.c
+	model/qfi_container_information.c
+	model/qos_flows_usage_report.c
+	model/quota_consumption_indicator.c
+	model/quota_consumption_indicator_any_of.c
+	model/quota_management_indicator.c
+	model/quota_management_indicator_any_of.c
+	model/radio_parameter_set_info.c
+	model/radio_resources_id.c
+	model/radio_resources_id_any_of.c
+	model/ran_secondary_rat_usage_report.c
+	model/reauthorization_details.c
+	model/recipient_address.c
+	model/recipient_info.c
+	model/redirect_server.c
+	model/redundant_transmission_type.c
+	model/redundant_transmission_type_any_of.c
+	model/registration_charging_information.c
+	model/registration_message_type.c
+	model/registration_message_type_any_of.c
+	model/reply_path_requested.c
+	model/reply_path_requested_any_of.c
+	model/requested_unit.c
+	model/result_code.c
+	model/result_code_any_of.c
+	model/roamer_in_out.c
+	model/roamer_in_out_any_of.c
+	model/roaming_qbc_information.c
+	model/role_of_ims_node.c
+	model/role_of_ims_node_any_of.c
+	model/role_of_ue.c
+	model/role_of_ue_any_of.c
+	model/sdp_media_component.c
+	model/sdp_time_stamps.c
+	model/sdp_type.c
+	model/sdp_type_any_of.c
+	model/server_capabilities.c
+	model/service_experience_type_any_of.c
+	model/service_profile_charging_information.c
+	model/serving_network_function_id.c
+	model/serving_node_address.c
+	model/session_failover.c
+	model/session_failover_any_of.c
+	model/sip_event_type.c
+	model/sm_address_domain.c
+	model/sm_address_info.c
+	model/sm_address_type.c
+	model/sm_address_type_any_of.c
+	model/sm_addressee_type.c
+	model/sm_addressee_type_any_of.c
+	model/sm_interface.c
+	model/sm_message_type.c
+	model/sm_message_type_any_of.c
+	model/sm_priority.c
+	model/sm_priority_any_of.c
+	model/sm_service_type.c
+	model/sm_service_type_any_of.c
+	model/sms_charging_information.c
+	model/sms_indication.c
+	model/sms_indication_any_of.c
+	model/svc_experience.c
+	model/tad_identifier.c
+	model/tad_identifier_any_of.c
+	model/throughput.c
+	model/traffic_forwarding_way.c
+	model/traffic_forwarding_way_any_of.c
+	model/transmitter_info.c
+	model/trunk_group_id.c
+	model/ue_transfer_type.c
+	model/ue_transfer_type_any_of.c
+	model/used_unit_container.c
+	model/user_information.c
+	model/variable_part.c
+	model/variable_part_type.c
+	model/variable_part_type_any_of.c
+    model/supplementary_service.c
+    model/supplementary_service_type.c
+    model/supplementary_service_mode.c
+    model/granted_unit.c
+    model/range_class.c
+
 '''.split())
 
 libsbi_openapi_inc = include_directories('.')

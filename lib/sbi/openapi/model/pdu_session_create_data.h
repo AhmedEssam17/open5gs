@@ -15,6 +15,7 @@
 #include "access_type.h"
 #include "apn_rate_status.h"
 #include "dnn_selection_mode.h"
+#include "dnn_selection_mode_any_of.h"
 #include "eps_interworking_indication.h"
 #include "guami.h"
 #include "max_integrity_protected_data_rate.h"
@@ -80,7 +81,7 @@ typedef struct OpenAPI_pdu_session_create_data_s {
     char *pcf_set_id;
     bool is_ho_preparation_indication;
     int ho_preparation_indication;
-    OpenAPI_dnn_selection_mode_e sel_mode;
+    OpenAPI_dnn_selection_mode_any_of_e sel_mode;
     bool is_always_on_requested;
     int always_on_requested;
     char *udm_group_id;
@@ -173,7 +174,7 @@ OpenAPI_pdu_session_create_data_t *OpenAPI_pdu_session_create_data_create(
     char *pcf_set_id,
     bool is_ho_preparation_indication,
     int ho_preparation_indication,
-    OpenAPI_dnn_selection_mode_e sel_mode,
+    OpenAPI_dnn_selection_mode_any_of_e sel_mode,
     bool is_always_on_requested,
     int always_on_requested,
     char *udm_group_id,

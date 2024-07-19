@@ -43,7 +43,7 @@ OpenAPI_pdu_session_create_data_t *OpenAPI_pdu_session_create_data_create(
     char *pcf_set_id,
     bool is_ho_preparation_indication,
     int ho_preparation_indication,
-    OpenAPI_dnn_selection_mode_e sel_mode,
+    OpenAPI_dnn_selection_mode_any_of_e sel_mode,
     bool is_always_on_requested,
     int always_on_requested,
     char *udm_group_id,
@@ -744,8 +744,8 @@ cJSON *OpenAPI_pdu_session_create_data_convertToJSON(OpenAPI_pdu_session_create_
     }
     }
 
-    if (pdu_session_create_data->sel_mode != OpenAPI_dnn_selection_mode_NULL) {
-    if (cJSON_AddStringToObject(item, "selMode", OpenAPI_dnn_selection_mode_ToString(pdu_session_create_data->sel_mode)) == NULL) {
+    if (pdu_session_create_data->sel_mode != OpenAPI_dnn_selection_mode_any_of_NULL) {
+    if (cJSON_AddStringToObject(item, "selMode", OpenAPI_dnn_selection_mode_any_of_ToString(pdu_session_create_data->sel_mode)) == NULL) {
         ogs_error("OpenAPI_pdu_session_create_data_convertToJSON() failed [sel_mode]");
         goto end;
     }
@@ -1146,7 +1146,7 @@ OpenAPI_pdu_session_create_data_t *OpenAPI_pdu_session_create_data_parseFromJSON
     cJSON *pcf_set_id = NULL;
     cJSON *ho_preparation_indication = NULL;
     cJSON *sel_mode = NULL;
-    OpenAPI_dnn_selection_mode_e sel_modeVariable = 0;
+    OpenAPI_dnn_selection_mode_any_of_e sel_modeVariable = 0;
     cJSON *always_on_requested = NULL;
     cJSON *udm_group_id = NULL;
     cJSON *routing_indicator = NULL;
@@ -1527,7 +1527,7 @@ OpenAPI_pdu_session_create_data_t *OpenAPI_pdu_session_create_data_parseFromJSON
         ogs_error("OpenAPI_pdu_session_create_data_parseFromJSON() failed [sel_mode]");
         goto end;
     }
-    sel_modeVariable = OpenAPI_dnn_selection_mode_FromString(sel_mode->valuestring);
+    sel_modeVariable = OpenAPI_dnn_selection_mode_any_of_FromString(sel_mode->valuestring);
     }
 
     always_on_requested = cJSON_GetObjectItemCaseSensitive(pdu_session_create_dataJSON, "alwaysOnRequested");

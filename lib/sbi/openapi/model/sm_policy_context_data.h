@@ -34,6 +34,7 @@
 #include "trace_data.h"
 #include "user_location.h"
 #include "vplmn_qos.h"
+#include "dnn_selection_mode_any_of.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,7 +53,7 @@ typedef struct OpenAPI_sm_policy_context_data_s {
     OpenAPI_pdu_session_type_e pdu_session_type;
     char *chargingcharacteristics;
     char *dnn;
-    OpenAPI_dnn_selection_mode_e dnn_sel_mode;
+    OpenAPI_dnn_selection_mode_any_of_e dnn_sel_mode;
     char *notification_uri;
     OpenAPI_access_type_e access_type;
     OpenAPI_rat_type_e rat_type;
@@ -111,7 +112,7 @@ OpenAPI_sm_policy_context_data_t *OpenAPI_sm_policy_context_data_create(
     OpenAPI_pdu_session_type_e pdu_session_type,
     char *chargingcharacteristics,
     char *dnn,
-    OpenAPI_dnn_selection_mode_e dnn_sel_mode,
+    OpenAPI_dnn_selection_mode_any_of_e dnn_sel_mode,
     char *notification_uri,
     OpenAPI_access_type_e access_type,
     OpenAPI_rat_type_e rat_type,

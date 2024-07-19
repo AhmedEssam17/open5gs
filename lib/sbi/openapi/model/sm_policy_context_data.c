@@ -16,7 +16,7 @@ OpenAPI_sm_policy_context_data_t *OpenAPI_sm_policy_context_data_create(
     OpenAPI_pdu_session_type_e pdu_session_type,
     char *chargingcharacteristics,
     char *dnn,
-    OpenAPI_dnn_selection_mode_e dnn_sel_mode,
+    OpenAPI_dnn_selection_mode_any_of_e dnn_sel_mode,
     char *notification_uri,
     OpenAPI_access_type_e access_type,
     OpenAPI_rat_type_e rat_type,
@@ -379,8 +379,8 @@ cJSON *OpenAPI_sm_policy_context_data_convertToJSON(OpenAPI_sm_policy_context_da
         goto end;
     }
 
-    if (sm_policy_context_data->dnn_sel_mode != OpenAPI_dnn_selection_mode_NULL) {
-    if (cJSON_AddStringToObject(item, "dnnSelMode", OpenAPI_dnn_selection_mode_ToString(sm_policy_context_data->dnn_sel_mode)) == NULL) {
+    if (sm_policy_context_data->dnn_sel_mode != OpenAPI_dnn_selection_mode_any_of_NULL) {
+    if (cJSON_AddStringToObject(item, "dnnSelMode", OpenAPI_dnn_selection_mode_any_of_ToString(sm_policy_context_data->dnn_sel_mode)) == NULL) {
         ogs_error("OpenAPI_sm_policy_context_data_convertToJSON() failed [dnn_sel_mode]");
         goto end;
     }
@@ -767,7 +767,7 @@ OpenAPI_sm_policy_context_data_t *OpenAPI_sm_policy_context_data_parseFromJSON(c
     cJSON *chargingcharacteristics = NULL;
     cJSON *dnn = NULL;
     cJSON *dnn_sel_mode = NULL;
-    OpenAPI_dnn_selection_mode_e dnn_sel_modeVariable = 0;
+    OpenAPI_dnn_selection_mode_any_of_e dnn_sel_modeVariable = 0;
     cJSON *notification_uri = NULL;
     cJSON *access_type = NULL;
     OpenAPI_access_type_e access_typeVariable = 0;
@@ -934,7 +934,7 @@ OpenAPI_sm_policy_context_data_t *OpenAPI_sm_policy_context_data_parseFromJSON(c
         ogs_error("OpenAPI_sm_policy_context_data_parseFromJSON() failed [dnn_sel_mode]");
         goto end;
     }
-    dnn_sel_modeVariable = OpenAPI_dnn_selection_mode_FromString(dnn_sel_mode->valuestring);
+    dnn_sel_modeVariable = OpenAPI_dnn_selection_mode_any_of_FromString(dnn_sel_mode->valuestring);
     }
 
     notification_uri = cJSON_GetObjectItemCaseSensitive(sm_policy_context_dataJSON, "notificationUri");

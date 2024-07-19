@@ -12,16 +12,22 @@
 #include "../include/list.h"
 #include "../include/keyValuePair.h"
 #include "../include/binary.h"
+#include "dnn_selection_mode_any_of.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef enum { OpenAPI_dnn_selection_mode_NULL = 0, OpenAPI_dnn_selection_mode_VERIFIED, OpenAPI_dnn_selection_mode_UE_DNN_NOT_VERIFIED, OpenAPI_dnn_selection_mode_NW_DNN_NOT_VERIFIED } OpenAPI_dnn_selection_mode_e;
+typedef struct OpenAPI_dnn_selection_mode_s OpenAPI_dnn_selection_mode_t;
+typedef struct OpenAPI_dnn_selection_mode_s {
+} OpenAPI_dnn_selection_mode_t;
 
-char* OpenAPI_dnn_selection_mode_ToString(OpenAPI_dnn_selection_mode_e dnn_selection_mode);
-
-OpenAPI_dnn_selection_mode_e OpenAPI_dnn_selection_mode_FromString(char* dnn_selection_mode);
+OpenAPI_dnn_selection_mode_t *OpenAPI_dnn_selection_mode_create(
+);
+void OpenAPI_dnn_selection_mode_free(OpenAPI_dnn_selection_mode_t *dnn_selection_mode);
+OpenAPI_dnn_selection_mode_t *OpenAPI_dnn_selection_mode_parseFromJSON(cJSON *dnn_selection_modeJSON);
+cJSON *OpenAPI_dnn_selection_mode_convertToJSON(OpenAPI_dnn_selection_mode_t *dnn_selection_mode);
+OpenAPI_dnn_selection_mode_t *OpenAPI_dnn_selection_mode_copy(OpenAPI_dnn_selection_mode_t *dst, OpenAPI_dnn_selection_mode_t *src);
 
 #ifdef __cplusplus
 }

@@ -1,0 +1,31 @@
+/*
+ * supplementary_service_type_any_of.h
+ *
+ * 
+ */
+
+#ifndef _OpenAPI_supplementary_service_type_any_of_H_
+#define _OpenAPI_supplementary_service_type_any_of_H_
+
+#include <string.h>
+#include "../external/cJSON.h"
+#include "../include/list.h"
+#include "../include/keyValuePair.h"
+#include "../include/binary.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef enum { OpenAPI_supplementary_service_type_any_of_NULL = 0, OpenAPI_supplementary_service_type_any_of_OIP, OpenAPI_supplementary_service_type_any_of_OIR, OpenAPI_supplementary_service_type_any_of_TIP, OpenAPI_supplementary_service_type_any_of_TIR, OpenAPI_supplementary_service_type_any_of_HOLD, OpenAPI_supplementary_service_type_any_of_CB, OpenAPI_supplementary_service_type_any_of_CDIV, OpenAPI_supplementary_service_type_any_of_CW, OpenAPI_supplementary_service_type_any_of_MWI, OpenAPI_supplementary_service_type_any_of_CONF, OpenAPI_supplementary_service_type_any_of_FA, OpenAPI_supplementary_service_type_any_of_CCBS, OpenAPI_supplementary_service_type_any_of_CCNR, OpenAPI_supplementary_service_type_any_of_MCID, OpenAPI_supplementary_service_type_any_of_CAT, OpenAPI_supplementary_service_type_any_of_CUG, OpenAPI_supplementary_service_type_any_of_PNM, OpenAPI_supplementary_service_type_any_of_CRS, OpenAPI_supplementary_service_type_any_of_ECT } OpenAPI_supplementary_service_type_any_of_e;
+
+char* OpenAPI_supplementary_service_type_any_of_ToString(OpenAPI_supplementary_service_type_any_of_e supplementary_service_type_any_of);
+
+OpenAPI_supplementary_service_type_any_of_e OpenAPI_supplementary_service_type_any_of_FromString(char* supplementary_service_type_any_of);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _OpenAPI_supplementary_service_type_any_of_H_ */
+

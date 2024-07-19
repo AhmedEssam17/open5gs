@@ -39,6 +39,7 @@
 #include "up_cnx_state.h"
 #include "user_location.h"
 #include "w_agf_info.h"
+#include "dnn_selection_mode_any_of.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -89,7 +90,7 @@ typedef struct OpenAPI_sm_context_create_data_s {
     char *pcf_set_id;
     char *nrf_uri;
     char *supported_features;
-    OpenAPI_dnn_selection_mode_e sel_mode;
+    OpenAPI_dnn_selection_mode_any_of_e sel_mode;
     OpenAPI_list_t *backup_amf_info;
     bool is_trace_data_null;
     struct OpenAPI_trace_data_s *trace_data;
@@ -214,7 +215,7 @@ OpenAPI_sm_context_create_data_t *OpenAPI_sm_context_create_data_create(
     char *pcf_set_id,
     char *nrf_uri,
     char *supported_features,
-    OpenAPI_dnn_selection_mode_e sel_mode,
+    OpenAPI_dnn_selection_mode_any_of_e sel_mode,
     OpenAPI_list_t *backup_amf_info,
     bool is_trace_data_null,
     OpenAPI_trace_data_t *trace_data,

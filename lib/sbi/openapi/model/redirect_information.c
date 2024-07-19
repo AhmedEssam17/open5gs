@@ -7,7 +7,7 @@
 OpenAPI_redirect_information_t *OpenAPI_redirect_information_create(
     bool is_redirect_enabled,
     int redirect_enabled,
-    OpenAPI_redirect_address_type_e redirect_address_type,
+    OpenAPI_redirect_address_type_any_of_e redirect_address_type,
     char *redirect_server_address
 )
 {
@@ -54,8 +54,8 @@ cJSON *OpenAPI_redirect_information_convertToJSON(OpenAPI_redirect_information_t
     }
     }
 
-    if (redirect_information->redirect_address_type != OpenAPI_redirect_address_type_NULL) {
-    if (cJSON_AddStringToObject(item, "redirectAddressType", OpenAPI_redirect_address_type_ToString(redirect_information->redirect_address_type)) == NULL) {
+    if (redirect_information->redirect_address_type != OpenAPI_redirect_address_type_any_of_NULL) {
+    if (cJSON_AddStringToObject(item, "redirectAddressType", OpenAPI_redirect_address_type_any_of_ToString(redirect_information->redirect_address_type)) == NULL) {
         ogs_error("OpenAPI_redirect_information_convertToJSON() failed [redirect_address_type]");
         goto end;
     }
@@ -78,7 +78,7 @@ OpenAPI_redirect_information_t *OpenAPI_redirect_information_parseFromJSON(cJSON
     OpenAPI_lnode_t *node = NULL;
     cJSON *redirect_enabled = NULL;
     cJSON *redirect_address_type = NULL;
-    OpenAPI_redirect_address_type_e redirect_address_typeVariable = 0;
+    OpenAPI_redirect_address_type_any_of_e redirect_address_typeVariable = 0;
     cJSON *redirect_server_address = NULL;
     redirect_enabled = cJSON_GetObjectItemCaseSensitive(redirect_informationJSON, "redirectEnabled");
     if (redirect_enabled) {
@@ -94,7 +94,7 @@ OpenAPI_redirect_information_t *OpenAPI_redirect_information_parseFromJSON(cJSON
         ogs_error("OpenAPI_redirect_information_parseFromJSON() failed [redirect_address_type]");
         goto end;
     }
-    redirect_address_typeVariable = OpenAPI_redirect_address_type_FromString(redirect_address_type->valuestring);
+    redirect_address_typeVariable = OpenAPI_redirect_address_type_any_of_FromString(redirect_address_type->valuestring);
     }
 
     redirect_server_address = cJSON_GetObjectItemCaseSensitive(redirect_informationJSON, "redirectServerAddress");

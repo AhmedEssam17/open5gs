@@ -12,16 +12,23 @@
 #include "../include/list.h"
 #include "../include/keyValuePair.h"
 #include "../include/binary.h"
+#include "notification_type.h"
+#include "notification_type_any_of.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef enum { OpenAPI_notification_type_NULL = 0, OpenAPI_notification_type_N1_MESSAGES, OpenAPI_notification_type_N2_INFORMATION, OpenAPI_notification_type_LOCATION_NOTIFICATION, OpenAPI_notification_type_DATA_REMOVAL_NOTIFICATION, OpenAPI_notification_type_DATA_CHANGE_NOTIFICATION, OpenAPI_notification_type_LOCATION_UPDATE_NOTIFICATION, OpenAPI_notification_type_NSSAA_REAUTH_NOTIFICATION, OpenAPI_notification_type_NSSAA_REVOC_NOTIFICATION, OpenAPI_notification_type_MATCH_INFO_NOTIFICATION, OpenAPI_notification_type_DATA_RESTORATION_NOTIFICATION, OpenAPI_notification_type_TSCTS_NOTIFICATION, OpenAPI_notification_type_LCS_KEY_DELIVERY_NOTIFICATION } OpenAPI_notification_type_e;
+typedef struct OpenAPI_notification_type_s OpenAPI_notification_type_t;
+typedef struct OpenAPI_notification_type_s {
+} OpenAPI_notification_type_t;
 
-char* OpenAPI_notification_type_ToString(OpenAPI_notification_type_e notification_type);
-
-OpenAPI_notification_type_e OpenAPI_notification_type_FromString(char* notification_type);
+OpenAPI_notification_type_t *OpenAPI_notification_type_create(
+);
+void OpenAPI_notification_type_free(OpenAPI_notification_type_t *notification_type);
+OpenAPI_notification_type_t *OpenAPI_notification_type_parseFromJSON(cJSON *notification_typeJSON);
+cJSON *OpenAPI_notification_type_convertToJSON(OpenAPI_notification_type_t *notification_type);
+OpenAPI_notification_type_t *OpenAPI_notification_type_copy(OpenAPI_notification_type_t *dst, OpenAPI_notification_type_t *src);
 
 #ifdef __cplusplus
 }

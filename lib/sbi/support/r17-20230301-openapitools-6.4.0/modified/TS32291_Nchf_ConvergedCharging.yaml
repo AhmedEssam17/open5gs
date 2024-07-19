@@ -1972,19 +1972,19 @@ components:
           $ref: '#/components/schemas/NNIRelationshipMode'
         neighbourNodeAddress:
           $ref: '#/components/schemas/IMSAddress'
-    EASRequirements:
-      type: object
-      properties:
-        requiredEASservingLocation:
-          $ref: 'TS28538_EdgeNrm.yaml/components/schemas/ServingLocation'
-        softwareImageInfo:
-          $ref: 'TS28538_EdgeNrm.yaml/components/schemas/SoftwareImageInfo'
-        affinityAntiAffinity:
-          $ref: 'TS28538_EdgeNrm.yaml/components/schemas/AffinityAntiAffinity'
-        serviceContinuity:
-          type: boolean
-        virtualResource:
-          $ref: 'TS28538_EdgeNrm.yaml/components/schemas/VirtualResource'
+    # EASRequirements:
+    #   type: object
+    #   properties:
+    #     requiredEASservingLocation:
+    #       $ref: 'TS28538_EdgeNrm.yaml/components/schemas/ServingLocation'
+    #     softwareImageInfo:
+    #       $ref: 'TS28538_EdgeNrm.yaml/components/schemas/SoftwareImageInfo'
+    #     affinityAntiAffinity:
+    #       $ref: 'TS28538_EdgeNrm.yaml/components/schemas/AffinityAntiAffinity'
+    #     serviceContinuity:
+    #       type: boolean
+    #     virtualResource:
+    #       $ref: 'TS28538_EdgeNrm.yaml/components/schemas/VirtualResource'
     NotificationType:
       anyOf:
         - type: string

@@ -3,28 +3,86 @@
 #include <string.h>
 #include <stdio.h>
 #include "dnn_selection_mode.h"
+#include "dnn_selection_mode_any_of.h"
 
-char* OpenAPI_dnn_selection_mode_ToString(OpenAPI_dnn_selection_mode_e dnn_selection_mode)
+OpenAPI_dnn_selection_mode_t *OpenAPI_dnn_selection_mode_create(
+)
 {
-    const char *dnn_selection_modeArray[] =  { "NULL", "VERIFIED", "UE_DNN_NOT_VERIFIED", "NW_DNN_NOT_VERIFIED" };
-    size_t sizeofArray = sizeof(dnn_selection_modeArray) / sizeof(dnn_selection_modeArray[0]);
-    if (dnn_selection_mode < sizeofArray)
-        return (char *)dnn_selection_modeArray[dnn_selection_mode];
-    else
-        return (char *)"Unknown";
+    OpenAPI_dnn_selection_mode_t *dnn_selection_mode_local_var = ogs_malloc(sizeof(OpenAPI_dnn_selection_mode_t));
+    ogs_assert(dnn_selection_mode_local_var);
+
+
+    return dnn_selection_mode_local_var;
 }
 
-OpenAPI_dnn_selection_mode_e OpenAPI_dnn_selection_mode_FromString(char* dnn_selection_mode)
+void OpenAPI_dnn_selection_mode_free(OpenAPI_dnn_selection_mode_t *dnn_selection_mode)
 {
-    int stringToReturn = 0;
-    const char *dnn_selection_modeArray[] =  { "NULL", "VERIFIED", "UE_DNN_NOT_VERIFIED", "NW_DNN_NOT_VERIFIED" };
-    size_t sizeofArray = sizeof(dnn_selection_modeArray) / sizeof(dnn_selection_modeArray[0]);
-    while (stringToReturn < sizeofArray) {
-        if (strcmp(dnn_selection_mode, dnn_selection_modeArray[stringToReturn]) == 0) {
-            return stringToReturn;
-        }
-        stringToReturn++;
+    OpenAPI_lnode_t *node = NULL;
+
+    if (NULL == dnn_selection_mode) {
+        return;
     }
-    return 0;
+    ogs_free(dnn_selection_mode);
+}
+
+cJSON *OpenAPI_dnn_selection_mode_convertToJSON(OpenAPI_dnn_selection_mode_t *dnn_selection_mode)
+{
+    cJSON *item = NULL;
+    OpenAPI_lnode_t *node = NULL;
+
+    if (dnn_selection_mode == NULL) {
+        ogs_error("OpenAPI_dnn_selection_mode_convertToJSON() failed [dnnSelectionMode]");
+        return NULL;
+    }
+
+    item = cJSON_CreateObject();
+end:
+    return item;
+}
+
+OpenAPI_dnn_selection_mode_t *OpenAPI_dnn_selection_mode_parseFromJSON(cJSON *dnn_selection_modeJSON)
+{
+    OpenAPI_dnn_selection_mode_t *dnn_selection_mode_local_var = NULL;
+    OpenAPI_lnode_t *node = NULL;
+    dnn_selection_mode_local_var = OpenAPI_dnn_selection_mode_create (
+    );
+
+    return dnn_selection_mode_local_var;
+end:
+    return NULL;
+}
+
+OpenAPI_dnn_selection_mode_t *OpenAPI_dnn_selection_mode_copy(OpenAPI_dnn_selection_mode_t *dst, OpenAPI_dnn_selection_mode_t *src)
+{
+    cJSON *item = NULL;
+    char *content = NULL;
+
+    ogs_assert(src);
+    item = OpenAPI_dnn_selection_mode_convertToJSON(src);
+    if (!item) {
+        ogs_error("OpenAPI_dnn_selection_mode_convertToJSON() failed");
+        return NULL;
+    }
+
+    content = cJSON_Print(item);
+    cJSON_Delete(item);
+
+    if (!content) {
+        ogs_error("cJSON_Print() failed");
+        return NULL;
+    }
+
+    item = cJSON_Parse(content);
+    ogs_free(content);
+    if (!item) {
+        ogs_error("cJSON_Parse() failed");
+        return NULL;
+    }
+
+    OpenAPI_dnn_selection_mode_free(dst);
+    dst = OpenAPI_dnn_selection_mode_parseFromJSON(item);
+    cJSON_Delete(item);
+
+    return dst;
 }
 

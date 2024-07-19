@@ -16,6 +16,7 @@
 #include "n1_message_class.h"
 #include "n2_information_class.h"
 #include "notification_type.h"
+#include "notification_type_any_of.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,7 +24,7 @@ extern "C" {
 
 typedef struct OpenAPI_default_notification_subscription_s OpenAPI_default_notification_subscription_t;
 typedef struct OpenAPI_default_notification_subscription_s {
-    OpenAPI_notification_type_e notification_type;
+    OpenAPI_notification_type_any_of_e notification_type;
     char *callback_uri;
     OpenAPI_n1_message_class_e n1_message_class;
     OpenAPI_n2_information_class_e n2_information_class;
@@ -35,7 +36,7 @@ typedef struct OpenAPI_default_notification_subscription_s {
 } OpenAPI_default_notification_subscription_t;
 
 OpenAPI_default_notification_subscription_t *OpenAPI_default_notification_subscription_create(
-    OpenAPI_notification_type_e notification_type,
+    OpenAPI_notification_type_any_of_e notification_type,
     char *callback_uri,
     OpenAPI_n1_message_class_e n1_message_class,
     OpenAPI_n2_information_class_e n2_information_class,

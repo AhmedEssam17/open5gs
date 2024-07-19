@@ -20,7 +20,7 @@ OpenAPI_sm_context_t *OpenAPI_sm_context_create(
     char *pcf_id,
     char *pcf_group_id,
     char *pcf_set_id,
-    OpenAPI_dnn_selection_mode_e sel_mode,
+    OpenAPI_dnn_selection_mode_any_of_e sel_mode,
     char *udm_group_id,
     char *routing_indicator,
     bool is_h_nw_pub_key_id,
@@ -472,8 +472,8 @@ cJSON *OpenAPI_sm_context_convertToJSON(OpenAPI_sm_context_t *sm_context)
     }
     }
 
-    if (sm_context->sel_mode != OpenAPI_dnn_selection_mode_NULL) {
-    if (cJSON_AddStringToObject(item, "selMode", OpenAPI_dnn_selection_mode_ToString(sm_context->sel_mode)) == NULL) {
+    if (sm_context->sel_mode != OpenAPI_dnn_selection_mode_any_of_NULL) {
+    if (cJSON_AddStringToObject(item, "selMode", OpenAPI_dnn_selection_mode_any_of_ToString(sm_context->sel_mode)) == NULL) {
         ogs_error("OpenAPI_sm_context_convertToJSON() failed [sel_mode]");
         goto end;
     }
@@ -907,7 +907,7 @@ OpenAPI_sm_context_t *OpenAPI_sm_context_parseFromJSON(cJSON *sm_contextJSON)
     cJSON *pcf_group_id = NULL;
     cJSON *pcf_set_id = NULL;
     cJSON *sel_mode = NULL;
-    OpenAPI_dnn_selection_mode_e sel_modeVariable = 0;
+    OpenAPI_dnn_selection_mode_any_of_e sel_modeVariable = 0;
     cJSON *udm_group_id = NULL;
     cJSON *routing_indicator = NULL;
     cJSON *h_nw_pub_key_id = NULL;
@@ -1106,7 +1106,7 @@ OpenAPI_sm_context_t *OpenAPI_sm_context_parseFromJSON(cJSON *sm_contextJSON)
         ogs_error("OpenAPI_sm_context_parseFromJSON() failed [sel_mode]");
         goto end;
     }
-    sel_modeVariable = OpenAPI_dnn_selection_mode_FromString(sel_mode->valuestring);
+    sel_modeVariable = OpenAPI_dnn_selection_mode_any_of_FromString(sel_mode->valuestring);
     }
 
     udm_group_id = cJSON_GetObjectItemCaseSensitive(sm_contextJSON, "udmGroupId");

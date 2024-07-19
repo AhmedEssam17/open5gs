@@ -29,6 +29,7 @@
 #include "snssai.h"
 #include "tunnel_info.h"
 #include "up_security.h"
+#include "dnn_selection_mode_any_of.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,7 +52,7 @@ typedef struct OpenAPI_sm_context_s {
     char *pcf_id;
     char *pcf_group_id;
     char *pcf_set_id;
-    OpenAPI_dnn_selection_mode_e sel_mode;
+    OpenAPI_dnn_selection_mode_any_of_e sel_mode;
     char *udm_group_id;
     char *routing_indicator;
     bool is_h_nw_pub_key_id;
@@ -124,7 +125,7 @@ OpenAPI_sm_context_t *OpenAPI_sm_context_create(
     char *pcf_id,
     char *pcf_group_id,
     char *pcf_set_id,
-    OpenAPI_dnn_selection_mode_e sel_mode,
+    OpenAPI_dnn_selection_mode_any_of_e sel_mode,
     char *udm_group_id,
     char *routing_indicator,
     bool is_h_nw_pub_key_id,

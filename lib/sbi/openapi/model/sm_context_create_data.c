@@ -48,7 +48,7 @@ OpenAPI_sm_context_create_data_t *OpenAPI_sm_context_create_data_create(
     char *pcf_set_id,
     char *nrf_uri,
     char *supported_features,
-    OpenAPI_dnn_selection_mode_e sel_mode,
+    OpenAPI_dnn_selection_mode_any_of_e sel_mode,
     OpenAPI_list_t *backup_amf_info,
     bool is_trace_data_null,
     OpenAPI_trace_data_t *trace_data,
@@ -919,8 +919,8 @@ cJSON *OpenAPI_sm_context_create_data_convertToJSON(OpenAPI_sm_context_create_da
     }
     }
 
-    if (sm_context_create_data->sel_mode != OpenAPI_dnn_selection_mode_NULL) {
-    if (cJSON_AddStringToObject(item, "selMode", OpenAPI_dnn_selection_mode_ToString(sm_context_create_data->sel_mode)) == NULL) {
+    if (sm_context_create_data->sel_mode != OpenAPI_dnn_selection_mode_any_of_NULL) {
+    if (cJSON_AddStringToObject(item, "selMode", OpenAPI_dnn_selection_mode_any_of_ToString(sm_context_create_data->sel_mode)) == NULL) {
         ogs_error("OpenAPI_sm_context_create_data_convertToJSON() failed [sel_mode]");
         goto end;
     }
@@ -1504,7 +1504,7 @@ OpenAPI_sm_context_create_data_t *OpenAPI_sm_context_create_data_parseFromJSON(c
     cJSON *nrf_uri = NULL;
     cJSON *supported_features = NULL;
     cJSON *sel_mode = NULL;
-    OpenAPI_dnn_selection_mode_e sel_modeVariable = 0;
+    OpenAPI_dnn_selection_mode_any_of_e sel_modeVariable = 0;
     cJSON *backup_amf_info = NULL;
     OpenAPI_list_t *backup_amf_infoList = NULL;
     cJSON *trace_data = NULL;
@@ -2000,7 +2000,7 @@ OpenAPI_sm_context_create_data_t *OpenAPI_sm_context_create_data_parseFromJSON(c
         ogs_error("OpenAPI_sm_context_create_data_parseFromJSON() failed [sel_mode]");
         goto end;
     }
-    sel_modeVariable = OpenAPI_dnn_selection_mode_FromString(sel_mode->valuestring);
+    sel_modeVariable = OpenAPI_dnn_selection_mode_any_of_FromString(sel_mode->valuestring);
     }
 
     backup_amf_info = cJSON_GetObjectItemCaseSensitive(sm_context_create_dataJSON, "backupAmfInfo");

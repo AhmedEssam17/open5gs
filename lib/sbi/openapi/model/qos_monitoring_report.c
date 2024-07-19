@@ -5,7 +5,6 @@
 #include "qos_monitoring_report.h"
 
 OpenAPI_qos_monitoring_report_t *OpenAPI_qos_monitoring_report_create(
-    OpenAPI_list_t *flows,
     OpenAPI_list_t *ul_delays,
     OpenAPI_list_t *dl_delays,
     OpenAPI_list_t *rt_delays
@@ -14,7 +13,6 @@ OpenAPI_qos_monitoring_report_t *OpenAPI_qos_monitoring_report_create(
     OpenAPI_qos_monitoring_report_t *qos_monitoring_report_local_var = ogs_malloc(sizeof(OpenAPI_qos_monitoring_report_t));
     ogs_assert(qos_monitoring_report_local_var);
 
-    qos_monitoring_report_local_var->flows = flows;
     qos_monitoring_report_local_var->ul_delays = ul_delays;
     qos_monitoring_report_local_var->dl_delays = dl_delays;
     qos_monitoring_report_local_var->rt_delays = rt_delays;
@@ -28,13 +26,6 @@ void OpenAPI_qos_monitoring_report_free(OpenAPI_qos_monitoring_report_t *qos_mon
 
     if (NULL == qos_monitoring_report) {
         return;
-    }
-    if (qos_monitoring_report->flows) {
-        OpenAPI_list_for_each(qos_monitoring_report->flows, node) {
-            OpenAPI_flows_free(node->data);
-        }
-        OpenAPI_list_free(qos_monitoring_report->flows);
-        qos_monitoring_report->flows = NULL;
     }
     if (qos_monitoring_report->ul_delays) {
         OpenAPI_list_for_each(qos_monitoring_report->ul_delays, node) {
@@ -71,22 +62,6 @@ cJSON *OpenAPI_qos_monitoring_report_convertToJSON(OpenAPI_qos_monitoring_report
     }
 
     item = cJSON_CreateObject();
-    if (qos_monitoring_report->flows) {
-    cJSON *flowsList = cJSON_AddArrayToObject(item, "flows");
-    if (flowsList == NULL) {
-        ogs_error("OpenAPI_qos_monitoring_report_convertToJSON() failed [flows]");
-        goto end;
-    }
-    OpenAPI_list_for_each(qos_monitoring_report->flows, node) {
-        cJSON *itemLocal = OpenAPI_flows_convertToJSON(node->data);
-        if (itemLocal == NULL) {
-            ogs_error("OpenAPI_qos_monitoring_report_convertToJSON() failed [flows]");
-            goto end;
-        }
-        cJSON_AddItemToArray(flowsList, itemLocal);
-    }
-    }
-
     if (qos_monitoring_report->ul_delays) {
     cJSON *ul_delaysList = cJSON_AddArrayToObject(item, "ulDelays");
     if (ul_delaysList == NULL) {
@@ -149,38 +124,12 @@ OpenAPI_qos_monitoring_report_t *OpenAPI_qos_monitoring_report_parseFromJSON(cJS
 {
     OpenAPI_qos_monitoring_report_t *qos_monitoring_report_local_var = NULL;
     OpenAPI_lnode_t *node = NULL;
-    cJSON *flows = NULL;
-    OpenAPI_list_t *flowsList = NULL;
     cJSON *ul_delays = NULL;
     OpenAPI_list_t *ul_delaysList = NULL;
     cJSON *dl_delays = NULL;
     OpenAPI_list_t *dl_delaysList = NULL;
     cJSON *rt_delays = NULL;
     OpenAPI_list_t *rt_delaysList = NULL;
-    flows = cJSON_GetObjectItemCaseSensitive(qos_monitoring_reportJSON, "flows");
-    if (flows) {
-        cJSON *flows_local = NULL;
-        if (!cJSON_IsArray(flows)) {
-            ogs_error("OpenAPI_qos_monitoring_report_parseFromJSON() failed [flows]");
-            goto end;
-        }
-
-        flowsList = OpenAPI_list_create();
-
-        cJSON_ArrayForEach(flows_local, flows) {
-            if (!cJSON_IsObject(flows_local)) {
-                ogs_error("OpenAPI_qos_monitoring_report_parseFromJSON() failed [flows]");
-                goto end;
-            }
-            OpenAPI_flows_t *flowsItem = OpenAPI_flows_parseFromJSON(flows_local);
-            if (!flowsItem) {
-                ogs_error("No flowsItem");
-                goto end;
-            }
-            OpenAPI_list_add(flowsList, flowsItem);
-        }
-    }
-
     ul_delays = cJSON_GetObjectItemCaseSensitive(qos_monitoring_reportJSON, "ulDelays");
     if (ul_delays) {
         cJSON *ul_delays_local = NULL;
@@ -263,7 +212,6 @@ OpenAPI_qos_monitoring_report_t *OpenAPI_qos_monitoring_report_parseFromJSON(cJS
     }
 
     qos_monitoring_report_local_var = OpenAPI_qos_monitoring_report_create (
-        flows ? flowsList : NULL,
         ul_delays ? ul_delaysList : NULL,
         dl_delays ? dl_delaysList : NULL,
         rt_delays ? rt_delaysList : NULL
@@ -271,13 +219,6 @@ OpenAPI_qos_monitoring_report_t *OpenAPI_qos_monitoring_report_parseFromJSON(cJS
 
     return qos_monitoring_report_local_var;
 end:
-    if (flowsList) {
-        OpenAPI_list_for_each(flowsList, node) {
-            OpenAPI_flows_free(node->data);
-        }
-        OpenAPI_list_free(flowsList);
-        flowsList = NULL;
-    }
     if (ul_delaysList) {
         OpenAPI_list_for_each(ul_delaysList, node) {
             ogs_free(node->data);
