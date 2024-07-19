@@ -5,5 +5,5 @@
 
 #pragma once
 
-#define OPEN5GS_VERSION "v2.7.1-64-g3df4447+"
+#define OPEN5GS_VERSION "v2.7.1-65-gbdc9bb6+"
 

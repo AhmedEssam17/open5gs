@@ -27,8 +27,8 @@ CMAKE_BUILD_TYPE:STRING=
 //No help, variable specified on the command line.
 CMAKE_CXX_COMPILER:UNINITIALIZED=c++
 
-//No help, variable specified on the command line.
-CMAKE_C_COMPILER:UNINITIALIZED=cc
+//C compiler
+CMAKE_C_COMPILER:STRING=/usr/bin/cc
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -108,7 +108,7 @@ CMAKE_INSTALL_MANDIR:PATH=
 CMAKE_INSTALL_OLDINCLUDEDIR:PATH=/usr/include
 
 //Install path prefix, prepended onto install directories.
-CMAKE_INSTALL_PREFIX:PATH=/usr/local
+CMAKE_INSTALL_PREFIX:PATH=/home/ubuntu/test2/open5gs/install
 
 //Run-time variable data (LOCALSTATEDIR/run)
 CMAKE_INSTALL_RUNSTATEDIR:PATH=
@@ -490,5 +490,5 @@ HAVE_C_ATOMICS64_WITHOUT_LIB:INTERNAL=1
 //Test HAVE_C_ATOMICS_WITHOUT_LIB
 HAVE_C_ATOMICS_WITHOUT_LIB:INTERNAL=1
 //CMAKE_INSTALL_PREFIX during last run
-_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=/usr/local
+_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=/home/ubuntu/test2/open5gs/install
 

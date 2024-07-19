@@ -1,6 +1,6 @@
 logger:
   file:
-    path: /var/local/log/open5gs/amf.log
+    path: /home/ubuntu/test2/open5gs/install/var/log/open5gs/amf.log
 #  level: info   # fatal|error|warn|info(default)|debug|trace
 
 global:
@@ -105,11 +105,11 @@ amf:
 #    tls:
 #      server:
 #        scheme: https
-#        private_key: /usr/local/etc/open5gs/tls/amf.key
-#        cert: /usr/local/etc/open5gs/tls/amf.crt
+#        private_key: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/amf.key
+#        cert: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/amf.crt
 #      client:
 #        scheme: https
-#        cacert: /usr/local/etc/open5gs/tls/ca.crt
+#        cacert: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/ca.crt
 #  sbi:
 #    server:
 #      - address: amf.localdomain
@@ -122,15 +122,15 @@ amf:
 #    tls:
 #      server:
 #        scheme: https
-#        private_key: /usr/local/etc/open5gs/tls/amf.key
-#        cert: /usr/local/etc/open5gs/tls/amf.crt
+#        private_key: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/amf.key
+#        cert: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/amf.crt
 #        verify_client: true
-#        verify_client_cacert: /usr/local/etc/open5gs/tls/ca.crt
+#        verify_client_cacert: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/ca.crt
 #      client:
 #        scheme: https
-#        cacert: /usr/local/etc/open5gs/tls/ca.crt
-#        client_private_key: /usr/local/etc/open5gs/tls/amf.key
-#        client_cert: /usr/local/etc/open5gs/tls/amf.crt
+#        cacert: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/ca.crt
+#        client_private_key: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/amf.key
+#        client_cert: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/amf.crt
 #  sbi:
 #    server:
 #      - address: amf.localdomain

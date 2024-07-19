@@ -1,5 +1,5 @@
 [options]
-backend = ninja
+prefix = /home/ubuntu/test2/open5gs/install
 
 [properties]
 

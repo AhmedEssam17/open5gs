@@ -5,9 +5,9 @@
 
 #pragma once
 
-#define DEFAULT_CONF_PATH "/usr/local/etc/freeDiameter"
+#define DEFAULT_CONF_PATH "/home/ubuntu/test2/open5gs/install/etc/freeDiameter"
 
-#define DEFAULT_EXTENSIONS_PATH "/usr/local/lib/x86_64-linux-gnu/freeDiameter"
+#define DEFAULT_EXTENSIONS_PATH "/home/ubuntu/test2/open5gs/install/lib/x86_64-linux-gnu/freeDiameter"
 
 #define FD_DEFAULT_CONF_FILENAME "freeDiameter.conf"
 

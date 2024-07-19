@@ -1,6 +1,6 @@
 logger:
   file:
-    path: /var/local/log/open5gs/bsf.log
+    path: /home/ubuntu/test2/open5gs/install/var/log/open5gs/bsf.log
 #  level: info   # fatal|error|warn|info(default)|debug|trace
 
 global:
@@ -68,11 +68,11 @@ bsf:
 #    tls:
 #      server:
 #        scheme: https
-#        private_key: /usr/local/etc/open5gs/tls/bsf.key
-#        cert: /usr/local/etc/open5gs/tls/bsf.crt
+#        private_key: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/bsf.key
+#        cert: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/bsf.crt
 #      client:
 #        scheme: https
-#        cacert: /usr/local/etc/open5gs/tls/ca.crt
+#        cacert: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/ca.crt
 #  sbi:
 #    server:
 #      - address: bsf.localdomain
@@ -85,15 +85,15 @@ bsf:
 #    tls:
 #      server:
 #        scheme: https
-#        private_key: /usr/local/etc/open5gs/tls/bsf.key
-#        cert: /usr/local/etc/open5gs/tls/bsf.crt
+#        private_key: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/bsf.key
+#        cert: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/bsf.crt
 #        verify_client: true
-#        verify_client_cacert: /usr/local/etc/open5gs/tls/ca.crt
+#        verify_client_cacert: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/ca.crt
 #      client:
 #        scheme: https
-#        cacert: /usr/local/etc/open5gs/tls/ca.crt
-#        client_private_key: /usr/local/etc/open5gs/tls/bsf.key
-#        client_cert: /usr/local/etc/open5gs/tls/bsf.crt
+#        cacert: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/ca.crt
+#        client_private_key: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/bsf.key
+#        client_cert: /home/ubuntu/test2/open5gs/install/etc/open5gs/tls/bsf.crt
 #  sbi:
 #    server:
 #      - address: bsf.localdomain
