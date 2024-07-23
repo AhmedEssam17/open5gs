@@ -67,11 +67,16 @@ int gsm_handle_pdu_session_establishment_request(
                 extended_protocol_configuration_options);
     }
 
+    ogs_info("*****gsm-handler.c: gsm_handle_pdu_session_establishment_request() >> before discover&send*****");
+
+
     r = smf_sbi_discover_and_send(OGS_SBI_SERVICE_TYPE_NUDM_SDM, NULL,
             smf_nudm_sdm_build_get,
             sess, stream, 0, (char *)OGS_SBI_RESOURCE_NAME_SM_DATA);
     ogs_expect(r == OGS_OK);
     ogs_assert(r != OGS_ERROR);
+
+    ogs_info("*****gsm-handler.c: gsm_handle_pdu_session_establishment_request(): >> r = %d*****", r);
 
     return OGS_OK;
 }

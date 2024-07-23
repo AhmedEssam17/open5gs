@@ -22,6 +22,7 @@
 ogs_sbi_request_t *smf_npcf_smpolicycontrol_build_create(
         smf_sess_t *sess, void *data)
 {
+    ogs_info("*****npcf-build.c: smf_npcf_smpolicycontrol_build_create()*****");
     smf_ue_t *smf_ue = NULL;
 
     ogs_sbi_message_t message;
@@ -286,6 +287,7 @@ end:
 ogs_sbi_request_t *smf_npcf_smpolicycontrol_build_delete(
         smf_sess_t *sess, void *data)
 {
+    ogs_info("*****npcf-build.c: smf_npcf_smpolicycontrol_build_delete()*****");
     smf_npcf_smpolicycontrol_param_t *param = data;
 
     smf_ue_t *smf_ue = NULL;

@@ -1,7 +1,7 @@
 {
   "objects": [
     {
-      "jsonFile": "codemodel-v2-bd3e945d9ea0d905f3e5.json",
+      "jsonFile": "codemodel-v2-f9210ddd1c1014accc50.json",
       "kind": "codemodel",
       "configurations": [
         {
@@ -58,7 +58,7 @@
             {
               "directoryIndex": 1,
               "id": "prom::@fe1444634e76fa3c3a03",
-              "jsonFile": "target-prom-449a80beebbb8f2ecba1.json",
+              "jsonFile": "target-prom-cc69c32bf3d9bace221c.json",
               "name": "prom",
               "projectIndex": 1,
               "artifacts": [
@@ -98,10 +98,10 @@
                   ],
                   "includes": [
                     {
-                      "path": "/home/ubuntu/test2/open5gs/subprojects/prometheus-client-c/prom/include"
+                      "path": "/home/ubuntu/chf-open5gs/open5gs/subprojects/prometheus-client-c/prom/include"
                     },
                     {
-                      "path": "/home/ubuntu/test2/open5gs/subprojects/prometheus-client-c/prom/src"
+                      "path": "/home/ubuntu/chf-open5gs/open5gs/subprojects/prometheus-client-c/prom/src"
                     }
                   ],
                   "language": "C",
@@ -136,7 +136,7 @@
                   }
                 ],
                 "prefix": {
-                  "path": "/home/ubuntu/test2/open5gs/install"
+                  "path": "/home/ubuntu/chf-open5gs/open5gs/install"
                 }
               },
               "link": {
@@ -479,12 +479,12 @@
         }
       ],
       "paths": {
-        "build": "/home/ubuntu/test2/open5gs/build/subprojects/prometheus-client-c/__CMake_build",
-        "source": "/home/ubuntu/test2/open5gs/subprojects/prometheus-client-c"
+        "build": "/home/ubuntu/chf-open5gs/open5gs/build/subprojects/prometheus-client-c/__CMake_build",
+        "source": "/home/ubuntu/chf-open5gs/open5gs/subprojects/prometheus-client-c"
       }
     },
     {
-      "jsonFile": "cmakeFiles-v1-1bbe74d014b3f1119ab3.json",
+      "jsonFile": "cmakeFiles-v1-d17b601a4f7bfb34bd90.json",
       "kind": "cmakeFiles",
       "inputs": [
         {
@@ -502,7 +502,7 @@
         },
         {
           "isGenerated": true,
-          "path": "/home/ubuntu/test2/open5gs/build/subprojects/prometheus-client-c/__CMake_build/CMakeFiles/3.16.3/CMakeSystem.cmake"
+          "path": "/home/ubuntu/chf-open5gs/open5gs/build/subprojects/prometheus-client-c/__CMake_build/CMakeFiles/3.16.3/CMakeSystem.cmake"
         },
         {
           "isCMake": true,
@@ -731,7 +731,7 @@
         },
         {
           "isGenerated": true,
-          "path": "/home/ubuntu/test2/open5gs/build/subprojects/prometheus-client-c/__CMake_build/CMakeFiles/3.16.3/CMakeCCompiler.cmake"
+          "path": "/home/ubuntu/chf-open5gs/open5gs/build/subprojects/prometheus-client-c/__CMake_build/CMakeFiles/3.16.3/CMakeCCompiler.cmake"
         },
         {
           "isCMake": true,
@@ -860,7 +860,7 @@
         },
         {
           "isGenerated": true,
-          "path": "/home/ubuntu/test2/open5gs/build/subprojects/prometheus-client-c/__CMake_build/CMakeFiles/3.16.3/CMakeCCompiler.cmake"
+          "path": "/home/ubuntu/chf-open5gs/open5gs/build/subprojects/prometheus-client-c/__CMake_build/CMakeFiles/3.16.3/CMakeCCompiler.cmake"
         },
         {
           "isExternal": true,
@@ -953,8 +953,8 @@
         }
       ],
       "paths": {
-        "build": "/home/ubuntu/test2/open5gs/build/subprojects/prometheus-client-c/__CMake_build",
-        "source": "/home/ubuntu/test2/open5gs/subprojects/prometheus-client-c"
+        "build": "/home/ubuntu/chf-open5gs/open5gs/build/subprojects/prometheus-client-c/__CMake_build",
+        "source": "/home/ubuntu/chf-open5gs/open5gs/subprojects/prometheus-client-c"
       }
     }
   ]

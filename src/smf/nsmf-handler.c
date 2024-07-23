@@ -26,6 +26,8 @@
 bool smf_nsmf_handle_create_sm_context(
     smf_sess_t *sess, ogs_sbi_stream_t *stream, ogs_sbi_message_t *message)
 {
+    ogs_info("*****nsmf-handler.c: smf_nsmf_handle_create_sm_context()*****");
+    bool rc;
     bool rc;
     smf_ue_t *smf_ue = NULL;
     char *type = NULL;
@@ -379,6 +381,7 @@ bool smf_nsmf_handle_create_sm_context(
 bool smf_nsmf_handle_update_sm_context(
     smf_sess_t *sess, ogs_sbi_stream_t *stream, ogs_sbi_message_t *message)
 {
+    ogs_info("*****nsmf-handler.c: smf_nsmf_handle_update_sm_context()*****");
     int i;
     int r;
     smf_ue_t *smf_ue = NULL;
@@ -809,6 +812,7 @@ bool smf_nsmf_handle_update_sm_context(
 bool smf_nsmf_handle_release_sm_context(
     smf_sess_t *sess, ogs_sbi_stream_t *stream, ogs_sbi_message_t *message)
 {
+    ogs_info("*****nsmf-handler.c: smf_nsmf_handle_release_sm_context()*****");
     int r;
     smf_npcf_smpolicycontrol_param_t param;
     smf_ue_t *smf_ue = NULL;

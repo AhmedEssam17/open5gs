@@ -1,5 +1,5 @@
 [options]
-prefix = /home/ubuntu/test2/open5gs/install
+prefix = /home/ubuntu/chf-open5gs/open5gs/install
 
 [properties]
 

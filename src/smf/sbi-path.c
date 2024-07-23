@@ -97,6 +97,7 @@ int smf_sbi_discover_and_send(
         ogs_sbi_request_t *(*build)(smf_sess_t *sess, void *data),
         smf_sess_t *sess, ogs_sbi_stream_t *stream, int state, void *data)
 {
+    ogs_info("*****sbi-path.c: smf_sbi_discover_and_send(): %d*****", (int)service_type);
     int r;
     smf_ue_t *smf_ue = NULL;
     ogs_sbi_xact_t *xact = NULL;
@@ -197,6 +198,10 @@ int smf_sbi_discover_and_send(
         }
     }
 
+    if (target_nf_type == OpenAPI_nf_type_CHF) {
+        ogs_info("******Discovered CHF******");
+    }
+
     xact = ogs_sbi_xact_add(
             sess->id, &sess->sbi, service_type, discovery_option,
             (ogs_sbi_build_f)build, sess, data);
@@ -232,6 +237,31 @@ int smf_sbi_discover_and_send(
     }
 
     return OGS_OK;
+}
+
+int smf_sbi_discover_only(
+        smf_sess_t *sess, ogs_sbi_stream_t *stream,
+        ogs_sbi_service_type_e service_type)
+{
+    ogs_sbi_xact_t *xact = NULL;
+
+    ogs_assert(sess);
+    ogs_assert(service_type);
+
+    xact = ogs_sbi_xact_add(
+            0, &sess->sbi, service_type, NULL, NULL, NULL, NULL);
+    if (!xact) {
+        ogs_error("ogs_sbi_xact_add() failed");
+        return OGS_ERROR;
+    }
+
+    if (stream) {
+        xact->assoc_stream_id = ogs_sbi_id_from_stream(stream);
+        ogs_assert(xact->assoc_stream_id >= OGS_MIN_POOL_ID &&
+                xact->assoc_stream_id <= OGS_MAX_POOL_ID);
+    }
+
+    return ogs_sbi_discover_only(xact);
 }
 
 void smf_namf_comm_send_n1_n2_message_transfer(

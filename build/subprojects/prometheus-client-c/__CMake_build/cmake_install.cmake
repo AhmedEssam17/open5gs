@@ -1,8 +1,8 @@
-# Install script for directory: /home/ubuntu/test2/open5gs/subprojects/prometheus-client-c
+# Install script for directory: /home/ubuntu/chf-open5gs/open5gs/subprojects/prometheus-client-c
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/ubuntu/test2/open5gs/install")
+  set(CMAKE_INSTALL_PREFIX "/home/ubuntu/chf-open5gs/open5gs/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/ubuntu/test2/open5gs/build/subprojects/prometheus-client-c/__CMake_build/prom/cmake_install.cmake")
+  include("/home/ubuntu/chf-open5gs/open5gs/build/subprojects/prometheus-client-c/__CMake_build/prom/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/ubuntu/test2/open5gs/build/subprojects/prometheus-client-c/__CMake_build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/ubuntu/chf-open5gs/open5gs/build/subprojects/prometheus-client-c/__CMake_build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -41,6 +41,10 @@ int smf_sbi_discover_and_send(
         ogs_sbi_request_t *(*build)(smf_sess_t *sess, void *data),
         smf_sess_t *sess, ogs_sbi_stream_t *stream, int state, void *data);
 
+int smf_sbi_discover_only(
+        smf_sess_t *sess, ogs_sbi_stream_t *stream,
+        ogs_sbi_service_type_e service_type);
+
 void smf_namf_comm_send_n1_n2_message_transfer(
         smf_sess_t *sess, smf_n1_n2_message_transfer_param_t *param);
 void smf_namf_comm_send_n1_n2_pdu_establishment_reject(
