@@ -21,6 +21,7 @@
 #define SMF_NUDM_HANDLER_H
 
 #include "context.h"
+#include "nchf-build.h"
 
 #ifdef __cplusplus
 extern "C" {

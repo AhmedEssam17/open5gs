@@ -19,6 +19,7 @@
 
 #include "nudm-handler.h"
 #include "sbi-path.h"
+#include <unistd.h>
 
 bool smf_nudm_sdm_handle_get(smf_sess_t *sess, ogs_sbi_stream_t *stream,
         ogs_sbi_message_t *recvmsg)
@@ -365,17 +366,17 @@ bool smf_nudm_sdm_handle_get(smf_sess_t *sess, ogs_sbi_stream_t *stream,
             smf_npcf_smpolicycontrol_build_create, sess, stream, 0, NULL);
     ogs_expect(r == OGS_OK);
     ogs_assert(r != OGS_ERROR);
+    ogs_info("############## After discover and send of PCF ##############");
 
-    // ogs_info("*****nudm-handler.c: smf_nudm_sdm_handle_get(): >>> Before discover only");
-    // r = smf_sbi_discover_only(sess, stream, OGS_SBI_SERVICE_TYPE_NPCF_SMPOLICYCONTROL);
-    // ogs_info("*****nudm-handler.c: smf_nudm_sdm_handle_get(): >> r = %d*****", r);
+    // ogs_info("*************************************");
+    // sleep(1);
 
-    OpenAPI_charging_data_t OpenAPI_charging_data;
-
-    // TODO: discover and send CHF
-    ogs_info("*****nudm-handler.c: smf_nudm_sdm_handle_get(): >>> Before discover only");
-    r = smf_sbi_discover_only(sess, stream, OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING);
-    ogs_info("*****nudm-handler.c: smf_nudm_sdm_handle_get(): >> r = %d*****", r);
+    // // TODO: discover and send CHF
+    // ogs_info("########## Before discover and send of CHF ##########");
+    // r = smf_sbi_discover_and_send(
+    //         OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING, NULL,
+    //         smf_nchf_build_get, sess, stream, 0, NULL);
+    // ogs_info("########## After discover and send of CHF ##########");
     // ogs_expect(r == OGS_OK);
     // ogs_assert(r != OGS_ERROR);
 

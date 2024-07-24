@@ -522,7 +522,7 @@ ogs_sbi_request_t *ogs_sbi_build_request(ogs_sbi_message_t *message)
             ogs_free(v);
         }
     }
-
+    
     /* URL Query Paramemter */
     if (message->param.nf_id) {
         ogs_sbi_header_set(request->http.params,
@@ -662,7 +662,7 @@ ogs_sbi_request_t *ogs_sbi_build_request(ogs_sbi_message_t *message)
         ogs_sbi_header_set(request->http.params,
                 OGS_SBI_PARAM_IPV6PREFIX, message->param.ipv6prefix);
     }
-
+    
     if (build_content(&request->http, message) == false) {
         ogs_error("build_content() failed");
         ogs_sbi_request_free(request);

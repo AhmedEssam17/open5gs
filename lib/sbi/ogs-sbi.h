@@ -86,6 +86,8 @@
 #include "model/ue_authentication_ctx.h"
 #include "model/ue_context_transfer_req_data.h"
 #include "model/ue_context_transfer_rsp_data.h"
+#include "model/charging_data_request.h"
+#include "model/charging_data_response.h"
 
 #include "custom/links.h"
 

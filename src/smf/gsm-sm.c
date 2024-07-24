@@ -35,6 +35,7 @@
 #include "pfcp-path.h"
 #include "ngap-path.h"
 #include "fd-path.h"
+#include "nchf-build.h"
 
 static uint8_t gtp_cause_from_diameter(uint8_t gtp_version,
         const uint32_t dia_err, const uint32_t *dia_exp_err)
@@ -598,6 +599,10 @@ void smf_gsm_state_wait_5gc_sm_policy_association(ogs_fsm_t *s, smf_event_t *e)
                     OGS_FSM_TRAN(s, smf_gsm_state_5gc_n1_n2_reject);
                 } else if (smf_npcf_smpolicycontrol_handle_create(
                         sess, state, sbi_message) == true) {
+                            ogs_info("########## PCF handle create called #########");
+                        // smf_sbi_discover_and_send(
+                        //         OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING, NULL,
+                        //         smf_nchf_build_get, sess, stream, 0, NULL);
                     OGS_FSM_TRAN(s,
                         &smf_gsm_state_wait_pfcp_establishment);
                 } else {

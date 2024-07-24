@@ -253,6 +253,8 @@ ogs_sbi_request_t *smf_npcf_smpolicycontrol_build_create(
     request = ogs_sbi_build_request(&message);
     ogs_expect(request);
 
+    ogs_info("############## End of smf_npcf_smpolicycontrol_build_create PCF ##############");
+
 end:
     if (SmPolicyContextData.notification_uri)
         ogs_free(SmPolicyContextData.notification_uri);

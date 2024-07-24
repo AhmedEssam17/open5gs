@@ -687,6 +687,8 @@ bool smf_npcf_smpolicycontrol_handle_create(
     ogs_assert(OGS_OK ==
             smf_5gc_pfcp_send_session_establishment_request(sess, 0));
 
+    ogs_info("############## End of handle create of PCF ##############");
+
     return true;
 }
 

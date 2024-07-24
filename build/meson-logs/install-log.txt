@@ -124,8 +124,3 @@
 /home/ubuntu/chf-open5gs/open5gs/install/bin/open5gs-upfd
 /home/ubuntu/chf-open5gs/open5gs/install/bin/open5gs-smfd
 /home/ubuntu/chf-open5gs/open5gs/install/bin/open5gs-amfd
-/home/ubuntu/chf-open5gs/open5gs/install/bin
-/home/ubuntu/chf-open5gs/open5gs/install/lib/x86_64-linux-gnu/freeDiameter
-/home/ubuntu/chf-open5gs/open5gs/install/lib/x86_64-linux-gnu
-/home/ubuntu/chf-open5gs/open5gs/install/lib
-/home/ubuntu/chf-open5gs/open5gs/install

@@ -86,6 +86,7 @@ void smf_sbi_close(void)
 bool smf_sbi_send_request(
         ogs_sbi_nf_instance_t *nf_instance, ogs_sbi_xact_t *xact)
 {
+    ogs_info("XXXXXXXXXXXXXXXXX xact->service_type = %d XXXXXXXXXXXXXXXXX", xact->service_type);
     ogs_assert(nf_instance);
     ogs_assert(xact);
     return ogs_sbi_send_request_to_nf_instance(nf_instance, xact);
