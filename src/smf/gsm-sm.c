@@ -976,6 +976,10 @@ void smf_gsm_state_operational(ogs_fsm_t *s, smf_event_t *e)
         ogs_assert(smf_ue);
 
         SWITCH(sbi_message->h.service.name)
+        CASE(OGS_SBI_SERVICE_NAME_NCHF_CONVERGEDCHARGING)
+            ogs_info("OGS_SBI_SERVICE_NAME_NCHF_CONVERGEDCHARGING");
+            break;
+
         CASE(OGS_SBI_SERVICE_NAME_NPCF_SMPOLICYCONTROL)
             stream_id = OGS_POINTER_TO_UINT(e->h.sbi.data);
             if (stream_id >= OGS_MIN_POOL_ID && stream_id <= OGS_MAX_POOL_ID)
