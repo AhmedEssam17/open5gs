@@ -1,6 +1,6 @@
 logger:
   file:
-    path: /home/ubuntu/chf-open5gs/open5gs/install/var/log/open5gs/ausf.log
+    path: /home/ubuntu/openapiopen5gs/open5gs/install/var/log/open5gs/ausf.log
 #  level: info   # fatal|error|warn|info(default)|debug|trace
 
 global:
@@ -68,11 +68,11 @@ ausf:
 #    tls:
 #      server:
 #        scheme: https
-#        private_key: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/ausf.key
-#        cert: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/ausf.crt
+#        private_key: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/ausf.key
+#        cert: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/ausf.crt
 #      client:
 #        scheme: https
-#        cacert: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/ca.crt
+#        cacert: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/ca.crt
 #  sbi:
 #    server:
 #      - address: ausf.localdomain
@@ -85,15 +85,15 @@ ausf:
 #    tls:
 #      server:
 #        scheme: https
-#        private_key: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/ausf.key
-#        cert: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/ausf.crt
+#        private_key: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/ausf.key
+#        cert: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/ausf.crt
 #        verify_client: true
-#        verify_client_cacert: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/ca.crt
+#        verify_client_cacert: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/ca.crt
 #      client:
 #        scheme: https
-#        cacert: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/ca.crt
-#        client_private_key: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/ausf.key
-#        client_cert: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/ausf.crt
+#        cacert: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/ca.crt
+#        client_private_key: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/ausf.key
+#        client_cert: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/ausf.crt
 #  sbi:
 #    server:
 #      - address: ausf.localdomain

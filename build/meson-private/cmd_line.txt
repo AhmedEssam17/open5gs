@@ -1,6 +1,5 @@
 [options]
-prefix = /home/ubuntu/chf-open5gs/open5gs/install
-backend = ninja
+prefix = /home/ubuntu/openapiopen5gs/open5gs/install
 
 [properties]
 

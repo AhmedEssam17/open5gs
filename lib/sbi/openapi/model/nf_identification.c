@@ -9,7 +9,7 @@ OpenAPI_nf_identification_t *OpenAPI_nf_identification_create(
     char *n_fipv4_address,
     char *n_fipv6_address,
     OpenAPI_plmn_id_t *n_fplmnid,
-    OpenAPI_node_functionality_t *node_functionality,
+    char *n_node_functionality,
     char *n_f_fqdn
 )
 {
@@ -20,7 +20,7 @@ OpenAPI_nf_identification_t *OpenAPI_nf_identification_create(
     nf_identification_local_var->n_fipv4_address = n_fipv4_address;
     nf_identification_local_var->n_fipv6_address = n_fipv6_address;
     nf_identification_local_var->n_fplmnid = n_fplmnid;
-    nf_identification_local_var->node_functionality = node_functionality;
+    nf_identification_local_var->n_node_functionality = n_node_functionality;
     nf_identification_local_var->n_f_fqdn = n_f_fqdn;
 
     return nf_identification_local_var;
@@ -49,9 +49,9 @@ void OpenAPI_nf_identification_free(OpenAPI_nf_identification_t *nf_identificati
         OpenAPI_plmn_id_free(nf_identification->n_fplmnid);
         nf_identification->n_fplmnid = NULL;
     }
-    if (nf_identification->node_functionality) {
-        OpenAPI_node_functionality_free(nf_identification->node_functionality);
-        nf_identification->node_functionality = NULL;
+    if (nf_identification->n_node_functionality) {
+        ogs_free(nf_identification->n_node_functionality);
+        nf_identification->n_node_functionality = NULL;
     }
     if (nf_identification->n_f_fqdn) {
         ogs_free(nf_identification->n_f_fqdn);
@@ -105,19 +105,25 @@ cJSON *OpenAPI_nf_identification_convertToJSON(OpenAPI_nf_identification_t *nf_i
     }
     }
 
-    if (!nf_identification->node_functionality) {
-        ogs_error("OpenAPI_nf_identification_convertToJSON() failed [node_functionality]");
-        return NULL;
-    }
-    cJSON *node_functionality_local_JSON = OpenAPI_node_functionality_convertToJSON(nf_identification->node_functionality);
-    if (node_functionality_local_JSON == NULL) {
-        ogs_error("OpenAPI_nf_identification_convertToJSON() failed [node_functionality]");
+    // if (!nf_identification->node_functionality) {
+    //     ogs_error("OpenAPI_nf_identification_convertToJSON() failed [node_functionality]");
+    //     return NULL;
+    // }
+    // cJSON *node_functionality_local_JSON = OpenAPI_node_functionality_convertToJSON(nf_identification->node_functionality);
+    // if (node_functionality_local_JSON == NULL) {
+    //     ogs_error("OpenAPI_nf_identification_convertToJSON() failed [node_functionality]");
+    //     goto end;
+    // }
+    // cJSON_AddItemToObject(item, "nodeFunctionality", node_functionality_local_JSON);
+    // if (item->child == NULL) {
+    //     ogs_error("OpenAPI_nf_identification_convertToJSON() failed [node_functionality]");
+    //     goto end;
+    // }
+    if (nf_identification->n_node_functionality) {
+    if (cJSON_AddStringToObject(item, "nodeFunctionality", nf_identification->n_node_functionality) == NULL) {
+        ogs_error("OpenAPI_nf_identification_convertToJSON() failed [n_f_fqdn]");
         goto end;
     }
-    cJSON_AddItemToObject(item, "nodeFunctionality", node_functionality_local_JSON);
-    if (item->child == NULL) {
-        ogs_error("OpenAPI_nf_identification_convertToJSON() failed [node_functionality]");
-        goto end;
     }
 
     if (nf_identification->n_f_fqdn) {
@@ -140,8 +146,9 @@ OpenAPI_nf_identification_t *OpenAPI_nf_identification_parseFromJSON(cJSON *nf_i
     cJSON *n_fipv6_address = NULL;
     cJSON *n_fplmnid = NULL;
     OpenAPI_plmn_id_t *n_fplmnid_local_nonprim = NULL;
-    cJSON *node_functionality = NULL;
-    OpenAPI_node_functionality_t *node_functionality_local_nonprim = NULL;
+    cJSON * n_node_functionality = NULL;
+    // cJSON *node_functionality = NULL;
+    // OpenAPI_node_functionality_t *node_functionality_local_nonprim = NULL;
     cJSON *n_f_fqdn = NULL;
     n_f_name = cJSON_GetObjectItemCaseSensitive(nf_identificationJSON, "nFName");
     if (n_f_name) {
@@ -176,16 +183,24 @@ OpenAPI_nf_identification_t *OpenAPI_nf_identification_parseFromJSON(cJSON *nf_i
     }
     }
 
-    node_functionality = cJSON_GetObjectItemCaseSensitive(nf_identificationJSON, "nodeFunctionality");
-    if (!node_functionality) {
-        ogs_error("OpenAPI_nf_identification_parseFromJSON() failed [node_functionality]");
+    n_node_functionality = cJSON_GetObjectItemCaseSensitive(nf_identificationJSON, "node_Functionality");
+    if (n_node_functionality) {
+    if (!cJSON_IsString(n_node_functionality) && !cJSON_IsNull(n_node_functionality)) {
+        ogs_error("OpenAPI_nf_identification_parseFromJSON() failed [n_node_functionality]");
         goto end;
     }
-    node_functionality_local_nonprim = OpenAPI_node_functionality_parseFromJSON(node_functionality);
-    if (!node_functionality_local_nonprim) {
-        ogs_error("OpenAPI_node_functionality_parseFromJSON failed [node_functionality]");
-        goto end;
     }
+
+    // node_functionality = cJSON_GetObjectItemCaseSensitive(nf_identificationJSON, "nodeFunctionality");
+    // if (!node_functionality) {
+    //     ogs_error("OpenAPI_nf_identification_parseFromJSON() failed [node_functionality]");
+    //     goto end;
+    // }
+    // node_functionality_local_nonprim = OpenAPI_node_functionality_parseFromJSON(node_functionality);
+    // if (!node_functionality_local_nonprim) {
+    //     ogs_error("OpenAPI_node_functionality_parseFromJSON failed [node_functionality]");
+    //     goto end;
+    // }
 
     n_f_fqdn = cJSON_GetObjectItemCaseSensitive(nf_identificationJSON, "nFFqdn");
     if (n_f_fqdn) {
@@ -200,7 +215,8 @@ OpenAPI_nf_identification_t *OpenAPI_nf_identification_parseFromJSON(cJSON *nf_i
         n_fipv4_address && !cJSON_IsNull(n_fipv4_address) ? ogs_strdup(n_fipv4_address->valuestring) : NULL,
         n_fipv6_address && !cJSON_IsNull(n_fipv6_address) ? ogs_strdup(n_fipv6_address->valuestring) : NULL,
         n_fplmnid ? n_fplmnid_local_nonprim : NULL,
-        node_functionality_local_nonprim,
+        n_node_functionality && !cJSON_IsNull(n_node_functionality) ? ogs_strdup(n_node_functionality->valuestring) : NULL,
+        // node_functionality_local_nonprim,
         n_f_fqdn && !cJSON_IsNull(n_f_fqdn) ? ogs_strdup(n_f_fqdn->valuestring) : NULL
     );
 
@@ -210,10 +226,10 @@ end:
         OpenAPI_plmn_id_free(n_fplmnid_local_nonprim);
         n_fplmnid_local_nonprim = NULL;
     }
-    if (node_functionality_local_nonprim) {
-        OpenAPI_node_functionality_free(node_functionality_local_nonprim);
-        node_functionality_local_nonprim = NULL;
-    }
+    // if (node_functionality_local_nonprim) {
+    //     OpenAPI_node_functionality_free(node_functionality_local_nonprim);
+    //     node_functionality_local_nonprim = NULL;
+    // }
     return NULL;
 }
 

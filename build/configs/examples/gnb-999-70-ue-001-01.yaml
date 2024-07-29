@@ -35,14 +35,14 @@ mme:
     listen_on: 127.0.0.2
     no_fwd: true
     load_extension:
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dbg_msg_dumps.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dbg_msg_dumps.fdx
         conf: 0x8888
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_rfc5777.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_mip6i.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_nasreq.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_nas_mipv6.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_dcca.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_dcca_3gpp/dict_dcca_3gpp.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_rfc5777.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_mip6i.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_nasreq.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_nas_mipv6.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_dcca.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_dcca_3gpp/dict_dcca_3gpp.fdx
     connect:
       - identity: hss.localdomain
         address: 127.0.0.8
@@ -134,14 +134,14 @@ smf:
     listen_on: 127.0.0.4
     no_fwd: true
     load_extension:
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dbg_msg_dumps.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dbg_msg_dumps.fdx
         conf: 0x8888
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_rfc5777.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_mip6i.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_nasreq.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_nas_mipv6.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_dcca.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_dcca_3gpp/dict_dcca_3gpp.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_rfc5777.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_mip6i.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_nasreq.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_nas_mipv6.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_dcca.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_dcca_3gpp/dict_dcca_3gpp.fdx
     connect:
       - identity: pcrf.localdomain
         address: 127.0.0.9
@@ -221,14 +221,14 @@ hss:
     listen_on: 127.0.0.8
     no_fwd: true
     load_extension:
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dbg_msg_dumps.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dbg_msg_dumps.fdx
         conf: 0x8888
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_rfc5777.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_mip6i.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_nasreq.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_nas_mipv6.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_dcca.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_dcca_3gpp/dict_dcca_3gpp.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_rfc5777.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_mip6i.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_nasreq.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_nas_mipv6.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_dcca.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_dcca_3gpp/dict_dcca_3gpp.fdx
     connect:
       - identity: mme.localdomain
         address: 127.0.0.2
@@ -239,14 +239,14 @@ pcrf:
     listen_on: 127.0.0.9
     no_fwd: true
     load_extension:
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dbg_msg_dumps.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dbg_msg_dumps.fdx
         conf: 0x8888
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_rfc5777.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_mip6i.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_nasreq.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_nas_mipv6.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_dcca.fdx
-      - module: /home/ubuntu/chf-open5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_dcca_3gpp/dict_dcca_3gpp.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_rfc5777.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_mip6i.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_nasreq.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_nas_mipv6.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_dcca.fdx
+      - module: /home/ubuntu/openapiopen5gs/open5gs/build/subprojects/freeDiameter/extensions/dict_dcca_3gpp/dict_dcca_3gpp.fdx
     connect:
       - identity: smf.localdomain
         address: 127.0.0.4
@@ -279,10 +279,10 @@ udm:
   hnet:
     - id: 1
       scheme: 1
-      key: /home/ubuntu/chf-open5gs/open5gs/build/configs/open5gs/hnet/curve25519-1.key
+      key: /home/ubuntu/openapiopen5gs/open5gs/build/configs/open5gs/hnet/curve25519-1.key
     - id: 2
       scheme: 2
-      key: /home/ubuntu/chf-open5gs/open5gs/build/configs/open5gs/hnet/secp256r1-2.key
+      key: /home/ubuntu/openapiopen5gs/open5gs/build/configs/open5gs/hnet/secp256r1-2.key
   sbi:
     server:
       - address: 127.0.0.12

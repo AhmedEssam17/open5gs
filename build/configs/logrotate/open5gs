@@ -1,4 +1,4 @@
-/home/ubuntu/chf-open5gs/open5gs/install/var/log/open5gs/*.log {
+/home/ubuntu/openapiopen5gs/open5gs/install/var/log/open5gs/*.log {
     daily
     sharedscripts
     missingok

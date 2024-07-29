@@ -1,7 +1,7 @@
 db_uri: mongodb://localhost/open5gs
 logger:
   file:
-    path: /home/ubuntu/chf-open5gs/open5gs/install/var/log/open5gs/pcf.log
+    path: /home/ubuntu/openapiopen5gs/open5gs/install/var/log/open5gs/pcf.log
 #  level: info   # fatal|error|warn|info(default)|debug|trace
 
 global:
@@ -194,11 +194,11 @@ pcf:
 #    tls:
 #      server:
 #        scheme: https
-#        private_key: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/pcf.key
-#        cert: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/pcf.crt
+#        private_key: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/pcf.key
+#        cert: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/pcf.crt
 #      client:
 #        scheme: https
-#        cacert: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/ca.crt
+#        cacert: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/ca.crt
 #  sbi:
 #    server:
 #      - address: pcf.localdomain
@@ -211,15 +211,15 @@ pcf:
 #    tls:
 #      server:
 #        scheme: https
-#        private_key: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/pcf.key
-#        cert: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/pcf.crt
+#        private_key: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/pcf.key
+#        cert: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/pcf.crt
 #        verify_client: true
-#        verify_client_cacert: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/ca.crt
+#        verify_client_cacert: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/ca.crt
 #      client:
 #        scheme: https
-#        cacert: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/ca.crt
-#        client_private_key: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/pcf.key
-#        client_cert: /home/ubuntu/chf-open5gs/open5gs/install/etc/open5gs/tls/pcf.crt
+#        cacert: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/ca.crt
+#        client_private_key: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/pcf.key
+#        client_cert: /home/ubuntu/openapiopen5gs/open5gs/install/etc/open5gs/tls/pcf.crt
 #  sbi:
 #    server:
 #      - address: pcf.localdomain

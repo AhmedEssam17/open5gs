@@ -283,7 +283,6 @@ void ogs_sbi_response_free(ogs_sbi_response_t *response)
 
 ogs_sbi_request_t *ogs_sbi_build_request(ogs_sbi_message_t *message)
 {
-    ogs_info("zzzzzzzzzzzzzz 1 build message");
     int i;
     ogs_sbi_request_t *request = NULL;
     OpenAPI_nf_type_e nf_type = OpenAPI_nf_type_NULL;
@@ -318,15 +317,12 @@ ogs_sbi_request_t *ogs_sbi_build_request(ogs_sbi_message_t *message)
             return NULL;
         }
     } else {
-        ogs_info("zzzzzzzzzzzzzzzzzz else if (message->h.uri)");
         if (!message->h.service.name) {
             ogs_error("No Service Name");
             ogs_sbi_request_free(request);
             return NULL;
         }
-        ogs_info("zzzzzzzzzzzzzzzzzz before request->h.service.name = ogs_strdup(message->h.service.name);");
         request->h.service.name = ogs_strdup(message->h.service.name);
-        ogs_info("zzzzzzzzzzzzzzzzzz after request->h.service.name = ogs_strdup(message->h.service.name);");
         if (!request->h.service.name) {
             ogs_error("ogs_strdup() failed");
             ogs_sbi_request_free(request);
@@ -349,10 +345,8 @@ ogs_sbi_request_t *ogs_sbi_build_request(ogs_sbi_message_t *message)
             ogs_sbi_request_free(request);
             return NULL;
         }
-        ogs_info("zzzzzzzzzzzzzz before forloop");
         for (i = 0; i < OGS_SBI_MAX_NUM_OF_RESOURCE_COMPONENT &&
-                            message->h.resource.component[i]; i++) {
-            ogs_info("zzzzzzzzzzzzzz inside forloop");                    
+                            message->h.resource.component[i]; i++) {                   
             request->h.resource.component[i] = ogs_strdup(
                     message->h.resource.component[i]);
             if (!request->h.resource.component[i]) {
@@ -362,7 +356,6 @@ ogs_sbi_request_t *ogs_sbi_build_request(ogs_sbi_message_t *message)
             }
         }
     }
-    ogs_info("zzzzzzzzzzzzzz 2 message.h");
 
     /* Discovery Parameter */
     if (message->param.target_nf_type) {
@@ -385,7 +378,6 @@ ogs_sbi_request_t *ogs_sbi_build_request(ogs_sbi_message_t *message)
         ogs_sbi_header_set(request->http.params,
                 OGS_SBI_PARAM_REQUESTER_NF_TYPE, v);
     }
-    ogs_info("zzzzzzzzzzzzzz 3 Discovery Parameter");
     /* Discovery Option Parameter */
     if (message->param.discovery_option) {
         ogs_sbi_discovery_option_t *discovery_option =
@@ -529,7 +521,6 @@ ogs_sbi_request_t *ogs_sbi_build_request(ogs_sbi_message_t *message)
             ogs_free(v);
         }
     }
-    ogs_info("zzzzzzzzzzzzzz 4 Discovery Option Parameter");
     /* URL Query Paramemter */
     if (message->param.nf_id) {
         ogs_sbi_header_set(request->http.params,
@@ -669,7 +660,6 @@ ogs_sbi_request_t *ogs_sbi_build_request(ogs_sbi_message_t *message)
         ogs_sbi_header_set(request->http.params,
                 OGS_SBI_PARAM_IPV6PREFIX, message->param.ipv6prefix);
     }
-    ogs_info("zzzzzzzzzzzzzz 5 message->param");
     if (build_content(&request->http, message) == false) {
         ogs_error("build_content() failed");
         ogs_sbi_request_free(request);
@@ -1378,6 +1368,10 @@ static char *build_json(ogs_sbi_message_t *message)
     } else if (message->UeContextTransferRspData) {
         item = OpenAPI_ue_context_transfer_rsp_data_convertToJSON(
                 message->UeContextTransferRspData);
+        ogs_assert(item);
+    } else if (message->ChargingDataRequest) {
+        item = OpenAPI_charging_data_request_convertToJSON(
+                message->ChargingDataRequest);
         ogs_assert(item);
     }
 
@@ -2182,14 +2176,11 @@ static int parse_json(ogs_sbi_message_t *message,
             END
             break;
         CASE(OGS_SBI_SERVICE_NAME_NCHF_CONVERGEDCHARGING)
-            ogs_info("--------------PARSE JSONNNN 1---------------");
             SWITCH(message->h.resource.component[0])
             CASE((char *)"chargingdata")
                 if (!message->h.resource.component[1]) {
-                    ogs_info("--------------PARSE JSONNNN 2---------------");
                     ogs_info("message->res_status = %d", message->res_status);
                     if (message->res_status == 0) {
-                        ogs_info("--------------PARSE JSONNNN 3---------------");
                         message->ChargingDataRequest =
                             OpenAPI_charging_data_request_parseFromJSON(item);
                         if (!message->ChargingDataRequest) {

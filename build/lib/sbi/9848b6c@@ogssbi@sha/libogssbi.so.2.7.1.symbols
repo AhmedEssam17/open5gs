@@ -39,7 +39,7 @@ ogs_sbi_build_plmn_id T 1e0
 ogs_sbi_build_plmn_id_nid T 1e0
 ogs_sbi_build_plmn_list T 21a
 ogs_sbi_build_qos_data T 418
-ogs_sbi_build_request T 25a2
+ogs_sbi_build_request T 2318
 ogs_sbi_build_response T 250
 ogs_sbi_check_amf_info_guami T 179
 ogs_sbi_check_smf_info_slice T 255

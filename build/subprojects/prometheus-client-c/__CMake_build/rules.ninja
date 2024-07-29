@@ -42,7 +42,7 @@ rule C_SHARED_LIBRARY_LINKER__prom
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /usr/bin/cmake -S/home/ubuntu/chf-open5gs/open5gs/subprojects/prometheus-client-c -B/home/ubuntu/chf-open5gs/open5gs/build/subprojects/prometheus-client-c/__CMake_build
+  command = /usr/bin/cmake -S/home/ubuntu/openapiopen5gs/open5gs/subprojects/prometheus-client-c -B/home/ubuntu/openapiopen5gs/open5gs/build/subprojects/prometheus-client-c/__CMake_build
   description = Re-running CMake...
   generator = 1
 

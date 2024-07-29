@@ -5,5 +5,5 @@
 
 #pragma once
 
-#define MESON_BUILD_ROOT "/home/ubuntu/chf-open5gs/open5gs/build"
+#define MESON_BUILD_ROOT "/home/ubuntu/openapiopen5gs/open5gs/build"
 

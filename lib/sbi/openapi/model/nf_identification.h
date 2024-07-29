@@ -25,7 +25,7 @@ typedef struct OpenAPI_nf_identification_s {
     char *n_fipv4_address;
     char *n_fipv6_address;
     struct OpenAPI_plmn_id_s *n_fplmnid;
-    struct OpenAPI_node_functionality_s *node_functionality;
+    char *n_node_functionality;
     char *n_f_fqdn;
 } OpenAPI_nf_identification_t;
 
@@ -34,7 +34,7 @@ OpenAPI_nf_identification_t *OpenAPI_nf_identification_create(
     char *n_fipv4_address,
     char *n_fipv6_address,
     OpenAPI_plmn_id_t *n_fplmnid,
-    OpenAPI_node_functionality_t *node_functionality,
+    char  *node_functionality,
     char *n_f_fqdn
 );
 void OpenAPI_nf_identification_free(OpenAPI_nf_identification_t *nf_identification);

@@ -3002,11 +3002,11 @@ OpenAPI_nf_group_list_cond_copy T 1e2
 OpenAPI_nf_group_list_cond_create T bd
 OpenAPI_nf_group_list_cond_free T b2
 OpenAPI_nf_group_list_cond_parseFromJSON T 3d3
-OpenAPI_nf_identification_convertToJSON T 409
+OpenAPI_nf_identification_convertToJSON T 365
 OpenAPI_nf_identification_copy T 1e2
 OpenAPI_nf_identification_create T f3
-OpenAPI_nf_identification_free T 14a
-OpenAPI_nf_identification_parseFromJSON T 500
+OpenAPI_nf_identification_free T 151
+OpenAPI_nf_identification_parseFromJSON T 4fa
 OpenAPI_nf_identifier_convertToJSON T 19a
 OpenAPI_nf_identifier_copy T 1e2
 OpenAPI_nf_identifier_create T b0
