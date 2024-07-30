@@ -90,6 +90,9 @@ ogs_sbi_request_t *smf_nchf_build_get(smf_sess_t *sess, void *data){
 
     snssai.sst = sess->s_nssai.sst;
     snssai.sd = ogs_s_nssai_sd_to_string(sess->s_nssai.sd);
+    if(snssai.sd == NULL) {
+        snssai.sd = (char *)"010203";
+    }
     network_slicing_info.s_nssai = &snssai;
     pdu_session_information.network_slicing_info = &network_slicing_info;
     
