@@ -496,6 +496,8 @@ int smf_context_parse_config(void)
                     /* handle config in gtp library */
                 } else if (!strcmp(smf_key, "gtpu")) {
                     /* handle config in gtp library */
+                } else if (!strcmp(smf_key, "cdr")) {
+                /* handle config in pfcp library */
                 } else if (!strcmp(smf_key, "dns")) {
                     ogs_yaml_iter_t dns_iter;
                     ogs_yaml_iter_recurse(&smf_iter, &dns_iter);
@@ -2378,6 +2380,20 @@ smf_bearer_t *smf_bearer_add(smf_sess_t *sess)
 
     ogs_list_init(&bearer->pf_list);
 
+    ogs_pfcp_urr_t *urr = NULL;
+
+    /* If usage logging enabled create a new URR */
+    if (ogs_pfcp_self()->usageLoggerState.enabled) {
+        urr = ogs_pfcp_urr_add(&sess->pfcp);
+        ogs_assert(urr);
+
+        urr->meas_method = OGS_PFCP_MEASUREMENT_METHOD_DURATION;
+        urr->rep_triggers.time_threshold = 1;
+        urr->time_threshold = ogs_pfcp_self()->usageLoggerState.reporting_period_sec;
+        /* Enable Immediate Start Time Metering */
+        urr->meas_info.istm = 1;
+    }
+
     /* PDR */
     dl_pdr = ogs_pfcp_pdr_add(&sess->pfcp);
     ogs_assert(dl_pdr);
@@ -2386,6 +2402,10 @@ smf_bearer_t *smf_bearer_add(smf_sess_t *sess)
     ogs_assert(sess->session.name);
     dl_pdr->apn = ogs_strdup(sess->session.name);
     ogs_assert(dl_pdr->apn);
+
+    if (ogs_pfcp_self()->usageLoggerState.enabled) {
+        ogs_pfcp_pdr_associate_urr(dl_pdr, urr);
+    }
 
     dl_pdr->src_if = OGS_PFCP_INTERFACE_CORE;
 
@@ -2396,6 +2416,10 @@ smf_bearer_t *smf_bearer_add(smf_sess_t *sess)
     ogs_assert(sess->session.name);
     ul_pdr->apn = ogs_strdup(sess->session.name);
     ogs_assert(ul_pdr->apn);
+
+    if (ogs_pfcp_self()->usageLoggerState.enabled) {
+        ogs_pfcp_pdr_associate_urr(ul_pdr, urr);
+    }
 
     ul_pdr->src_if = OGS_PFCP_INTERFACE_ACCESS;
 

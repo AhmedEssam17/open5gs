@@ -877,6 +877,30 @@ void smf_gsm_state_operational(ogs_fsm_t *s, smf_event_t *e)
                 OGS_FSM_TRAN(s, smf_gsm_state_wait_pfcp_deletion);
             }
             break;
+        
+        case OGS_GTP2_CREATE_SESSION_REQUEST_TYPE:
+            /* Clobber the old sess with this new one */
+            gtp2_cause = smf_s5c_handle_create_session_request(sess,
+                            ogs_gtp_xact_find_by_id(e->gtp_xact_id),
+                            &e->gtp2_message->create_session_request);
+            if (gtp2_cause != OGS_GTP2_CAUSE_REQUEST_ACCEPTED) {
+                send_gtp_create_err_msg(sess, ogs_gtp_xact_find_by_id(e->gtp_xact_id), gtp2_cause);
+                return;
+            }
+            switch (sess->gtp_rat_type) {
+            case OGS_GTP2_RAT_TYPE_EUTRAN:
+                if (send_ccr_init_req_gx_gy(sess, ogs_gtp_xact_find_by_id(e->gtp_xact_id)) == true)
+                    OGS_FSM_TRAN(s, smf_gsm_state_wait_epc_auth_initial);
+                break;
+            case OGS_GTP2_RAT_TYPE_WLAN:
+                smf_s6b_send_aar(sess, ogs_gtp_xact_find_by_id(e->gtp_xact_id));
+                OGS_FSM_TRAN(s, smf_gsm_state_wait_epc_auth_initial);
+                break;
+            default:
+                ogs_error("Unknown RAT Type [%d]", sess->gtp_rat_type);
+                ogs_assert_if_reached();
+            }
+            break;
 
         default:
             ogs_error("Not implemented(type:%d)", gtp2_message->h.type);

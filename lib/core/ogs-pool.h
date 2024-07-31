@@ -153,6 +153,9 @@ typedef int32_t ogs_pool_id_t;
 #define ogs_pool_find(pool, _index) \
     (_index > 0 && _index <= (pool)->size) ? (pool)->index[_index-1] : NULL
 
+#define ogs_pool_cycle(pool, node) \
+    ogs_pool_find((pool), ogs_pool_index((pool), (node)))
+
 #define ogs_pool_id_calloc(pool, node) do { \
     ogs_pool_alloc(pool, node); \
     if (*node) { \
