@@ -598,17 +598,28 @@ void smf_gsm_state_wait_5gc_sm_policy_association(ogs_fsm_t *s, smf_event_t *e)
                             smf_ue->supi, sess->psi,
                             sbi_message->res_status);
                     OGS_FSM_TRAN(s, smf_gsm_state_5gc_n1_n2_reject);
-                } else if (smf_npcf_smpolicycontrol_handle_create(
-                        sess, state, sbi_message) == true) {
-                            ogs_info("########## PCF handle create called #########");
-                            ogs_info("$$$$$$$$$$$$$$ Calling CHF Discover and Send $$$$$$$$$$$$$$");
+                } else {
+                    if(smf_self()->ctf_config.enabled == SMF_CTF_ENABLED_YES || smf_self()->ctf_config.enabled == SMF_CTF_ENABLED_AUTO) {
+                        if (smf_npcf_smpolicycontrol_handle_create_with_ctf(
+                            sess, state, sbi_message) == true) {
                             smf_sbi_discover_and_send(
                                     OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING, NULL,
                                     smf_nchf_build_get, sess, NULL, 0, NULL);
-                } else {
-                    ogs_error(
-                        "smf_npcf_smpolicycontrol_handle_create() failed");
-                    OGS_FSM_TRAN(s, smf_gsm_state_5gc_n1_n2_reject);
+                        } else {
+                            ogs_error(
+                                "smf_npcf_smpolicycontrol_handle_create_with_ctf() failed");
+                            OGS_FSM_TRAN(s, smf_gsm_state_5gc_n1_n2_reject);
+                        }
+                    } else {
+                        if (smf_npcf_smpolicycontrol_handle_create(
+                            sess, state, sbi_message) == true) {
+                            OGS_FSM_TRAN(s,&smf_gsm_state_wait_pfcp_establishment);
+                        } else {
+                            ogs_error(
+                                "smf_npcf_smpolicycontrol_handle_create() failed");
+                            OGS_FSM_TRAN(s, smf_gsm_state_5gc_n1_n2_reject);
+                        }
+                    }
                 }
                 break;
 

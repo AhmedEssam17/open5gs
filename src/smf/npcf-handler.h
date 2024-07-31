@@ -33,6 +33,8 @@ bool smf_npcf_smpolicycontrol_handle_update_notify(
         smf_sess_t *sess, ogs_sbi_stream_t *stream, ogs_sbi_message_t *recvmsg);
 bool smf_npcf_smpolicycontrol_handle_terminate_notify(
         smf_sess_t *sess, ogs_sbi_stream_t *stream, ogs_sbi_message_t *recvmsg);
+bool smf_npcf_smpolicycontrol_handle_create_with_ctf(
+smf_sess_t *sess, int state, ogs_sbi_message_t *recvmsg);
 
 #ifdef __cplusplus
 }

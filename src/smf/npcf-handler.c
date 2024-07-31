@@ -276,12 +276,426 @@ bool smf_npcf_smpolicycontrol_handle_create(
         smf_sess_t *sess, int state, ogs_sbi_message_t *recvmsg)
 {
     ogs_info("*****npcf-handler.c: smf_npcf_smpolicycontrol_handle_create()*****");
-    // smf_sbi_discover_and_send(
-    //         OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING, NULL,
-    //         smf_nchf_build_get, sess, NULL, 0, NULL);
+    int rv;
+    char buf1[OGS_ADDRSTRLEN];
+    char buf2[OGS_ADDRSTRLEN];
+
+    smf_ue_t *smf_ue = NULL;
+    smf_bearer_t *qos_flow = NULL;
+    ogs_pfcp_pdr_t *dl_pdr = NULL;
+    ogs_pfcp_pdr_t *ul_pdr = NULL;
+    ogs_pfcp_pdr_t *cp2up_pdr = NULL;
+    ogs_pfcp_pdr_t *up2cp_pdr = NULL;
+    ogs_pfcp_far_t *up2cp_far = NULL;
+    ogs_pfcp_qer_t *qer = NULL;
+
+    OpenAPI_sm_policy_decision_t *SmPolicyDecision = NULL;
+    OpenAPI_lnode_t *node = NULL;
+
+#define MAX_TRIGGER_ID 128
+    bool trigger_results[MAX_TRIGGER_ID];
+
+    ogs_sbi_message_t message;
+    ogs_sbi_header_t header;
+
+    bool rc;
+    ogs_sbi_client_t *client = NULL;
+    OpenAPI_uri_scheme_e scheme = OpenAPI_uri_scheme_NULL;
+    char *fqdn = NULL;
+    uint16_t fqdn_port = 0;
+    ogs_sockaddr_t *addr = NULL, *addr6 = NULL;
+
+    ogs_assert(sess);
+    smf_ue = smf_ue_find_by_id(sess->smf_ue_id);
+    ogs_assert(smf_ue);
+
+    ogs_assert(recvmsg);
+
+    if (!recvmsg->http.location) {
+        ogs_error("[%s:%d] No http.location", smf_ue->supi, sess->psi);
+        return false;
+    }
+
+    SmPolicyDecision = recvmsg->SmPolicyDecision;
+    if (!SmPolicyDecision) {
+        ogs_error("[%s:%d] No SmPolicyDecision", smf_ue->supi, sess->psi);
+        return false;
+    }
+
+    memset(&header, 0, sizeof(header));
+    header.uri = recvmsg->http.location;
+
+    rv = ogs_sbi_parse_header(&message, &header);
+    if (rv != OGS_OK) {
+        ogs_error("[%s:%d] Cannot parse http.location [%s]",
+                smf_ue->supi, sess->psi, recvmsg->http.location);
+        return false;
+    }
+
+    if (!message.h.resource.component[1]) {
+        ogs_error("[%s:%d] No Assocication ID [%s]",
+                smf_ue->supi, sess->psi, recvmsg->http.location);
+
+        ogs_sbi_header_free(&header);
+        return false;
+    }
+
+    rc = ogs_sbi_getaddr_from_uri(
+            &scheme, &fqdn, &fqdn_port, &addr, &addr6, header.uri);
+    if (rc == false || scheme == OpenAPI_uri_scheme_NULL) {
+        ogs_error("[%s:%d] Invalid URI [%s]",
+                smf_ue->supi, sess->psi, header.uri);
+        ogs_sbi_header_free(&header);
+        return OGS_ERROR;
+    }
+
+    client = ogs_sbi_client_find(scheme, fqdn, fqdn_port, addr, addr6);
+    if (!client) {
+        ogs_debug("[%s:%d] ogs_sbi_client_add()", smf_ue->supi, sess->psi);
+        client = ogs_sbi_client_add(scheme, fqdn, fqdn_port, addr, addr6);
+        if (!client) {
+            ogs_error("[%s:%d] ogs_sbi_client_add() failed",
+                    smf_ue->supi, sess->psi);
+
+            ogs_sbi_header_free(&header);
+            ogs_free(fqdn);
+            ogs_freeaddrinfo(addr);
+            ogs_freeaddrinfo(addr6);
+
+            return OGS_ERROR;
+        }
+    }
+
+    OGS_SBI_SETUP_CLIENT(&sess->policy_association, client);
+
+    ogs_free(fqdn);
+    ogs_freeaddrinfo(addr);
+    ogs_freeaddrinfo(addr6);
+
+    PCF_SM_POLICY_STORE(sess, header.uri, message.h.resource.component[1]);
+
+    ogs_sbi_header_free(&header);
+
+    /* SBI Features */
+    if (SmPolicyDecision->supp_feat) {
+        uint64_t supported_features =
+            ogs_uint64_from_string(SmPolicyDecision->supp_feat);
+        sess->smpolicycontrol_features &= supported_features;
+    } else {
+        sess->smpolicycontrol_features = 0;
+    }
+
+    /*********************************************************************
+     * Handle Policy Control Request Triggers
+     *********************************************************************/
+
+    /* Get policy control request triggers */
+    memset(&trigger_results, 0, sizeof(trigger_results));
+    OpenAPI_list_for_each(SmPolicyDecision->policy_ctrl_req_triggers, node) {
+        if (node->data) {
+            OpenAPI_policy_control_request_trigger_e trigger_id =
+                (intptr_t)node->data;
+
+            ogs_assert(trigger_id < MAX_TRIGGER_ID);
+            trigger_results[trigger_id] = true;
+        }
+    }
+
+    /* Update authorized session-AMBR */
+    if (SmPolicyDecision->sess_rules) {
+        OpenAPI_map_t *SessRuleMap = NULL;
+        OpenAPI_session_rule_t *SessionRule = NULL;
+
+        OpenAPI_ambr_t *AuthSessAmbr = NULL;
+        OpenAPI_authorized_default_qos_t *AuthDefQos = NULL;
+
+        OpenAPI_list_for_each(SmPolicyDecision->sess_rules, node) {
+            SessRuleMap = node->data;
+            if (!SessRuleMap) {
+                ogs_error("No SessRuleMap");
+                continue;
+            }
+
+            SessionRule = SessRuleMap->value;
+            if (!SessionRule) {
+                ogs_error("No SessionRule");
+                continue;
+            }
+
+
+            AuthSessAmbr = SessionRule->auth_sess_ambr;
+            if (AuthSessAmbr && trigger_results[
+                OpenAPI_policy_control_request_trigger_SE_AMBR_CH] == true) {
+                if (AuthSessAmbr->uplink)
+                    sess->session.ambr.uplink =
+                        ogs_sbi_bitrate_from_string(AuthSessAmbr->uplink);
+                if (AuthSessAmbr->downlink)
+                    sess->session.ambr.downlink =
+                        ogs_sbi_bitrate_from_string(AuthSessAmbr->downlink);
+            }
+
+            AuthDefQos = SessionRule->auth_def_qos;
+            if (AuthDefQos && trigger_results[
+                OpenAPI_policy_control_request_trigger_DEF_QOS_CH] == true) {
+                sess->session.qos.index = AuthDefQos->_5qi;
+                sess->session.qos.arp.priority_level =
+                    AuthDefQos->priority_level;
+                if (AuthDefQos->arp) {
+                    sess->session.qos.arp.priority_level =
+                            AuthDefQos->arp->priority_level;
+                    if (AuthDefQos->arp->preempt_cap ==
+                        OpenAPI_preemption_capability_NOT_PREEMPT)
+                        sess->session.qos.arp.pre_emption_capability =
+                            OGS_5GC_PRE_EMPTION_DISABLED;
+                    else if (AuthDefQos->arp->preempt_cap ==
+                        OpenAPI_preemption_capability_MAY_PREEMPT)
+                        sess->session.qos.arp.pre_emption_capability =
+                            OGS_5GC_PRE_EMPTION_ENABLED;
+                    ogs_assert(sess->session.qos.arp.pre_emption_capability);
+
+                    if (AuthDefQos->arp->preempt_vuln ==
+                        OpenAPI_preemption_vulnerability_NOT_PREEMPTABLE)
+                        sess->session.qos.arp.pre_emption_vulnerability =
+                            OGS_5GC_PRE_EMPTION_DISABLED;
+                    else if (AuthDefQos->arp->preempt_vuln ==
+                        OpenAPI_preemption_vulnerability_PREEMPTABLE)
+                        sess->session.qos.arp.pre_emption_vulnerability =
+                            OGS_5GC_PRE_EMPTION_ENABLED;
+                    ogs_assert(sess->session.qos.arp.pre_emption_vulnerability);
+                }
+            }
+        }
+    }
+
+    /* Update authorized PCC rule & QoS */
+    update_authorized_pcc_rule_and_qos(sess, SmPolicyDecision);
+
+    /*********************************************************************
+     * Send PFCP Session Establiashment Request to the UPF
+     *********************************************************************/
+
+    /* Select UPF based on UE Location Information */
+    smf_sess_select_upf(sess);
+
+    /* Check if selected UPF is associated with SMF */
+    ogs_assert(sess->pfcp_node);
+    if (!OGS_FSM_CHECK(&sess->pfcp_node->sm, smf_pfcp_state_associated)) {
+        ogs_error("[%s:%d] No associated UPF", smf_ue->supi, sess->psi);
+        return false;
+    }
+
+    /* Remove all previous QoS flow */
+    smf_bearer_remove_all(sess);
+
+    /* Setup Default QoS flow */
+    qos_flow = smf_qos_flow_add(sess);
+    ogs_assert(qos_flow);
+
+    /* Setup CP/UP Data Forwarding PDR/FAR */
+    smf_sess_create_cp_up_data_forwarding(sess);
+
+    /* Copy Session QoS information to Default QoS Flow */
+    memcpy(&qos_flow->qos, &sess->session.qos, sizeof(ogs_qos_t));
+
+    /* Setup QER */
+    qer = qos_flow->qer;
+    ogs_assert(qer);
+    qer->mbr.uplink = sess->session.ambr.uplink;
+    qer->mbr.downlink = sess->session.ambr.downlink;
+
+    /* Setup PDR */
+    dl_pdr = qos_flow->dl_pdr;
+    ogs_assert(dl_pdr);
+    ul_pdr = qos_flow->ul_pdr;
+    ogs_assert(ul_pdr);
+    cp2up_pdr = sess->cp2up_pdr;
+    ogs_assert(cp2up_pdr);
+    up2cp_pdr = sess->up2cp_pdr;
+    ogs_assert(up2cp_pdr);
+
+    /* Setup FAR */
+    up2cp_far = sess->up2cp_far;
+    ogs_assert(up2cp_far);
+
+    /* Set UE IP Address to the Default DL PDR */
+    ogs_assert(OGS_OK ==
+        ogs_pfcp_paa_to_ue_ip_addr(&sess->paa,
+            &dl_pdr->ue_ip_addr, &dl_pdr->ue_ip_addr_len));
+    dl_pdr->ue_ip_addr.sd = OGS_PFCP_UE_IP_DST;
+
+    ogs_assert(OGS_OK ==
+        ogs_pfcp_paa_to_ue_ip_addr(&sess->paa,
+            &ul_pdr->ue_ip_addr, &ul_pdr->ue_ip_addr_len));
+
+    if (sess->session.ipv4_framed_routes &&
+        sess->pfcp_node->up_function_features.frrt) {
+        int i = 0;
+        for (i = 0; i < OGS_MAX_NUM_OF_FRAMED_ROUTES_IN_PDI; i++) {
+            const char *route = sess->session.ipv4_framed_routes[i];
+            if (!route) break;
+
+            if (!dl_pdr->ipv4_framed_routes) {
+                dl_pdr->ipv4_framed_routes =
+                    ogs_calloc(OGS_MAX_NUM_OF_FRAMED_ROUTES_IN_PDI,
+                               sizeof(dl_pdr->ipv4_framed_routes[0]));
+                ogs_assert(dl_pdr->ipv4_framed_routes);
+            }
+            dl_pdr->ipv4_framed_routes[i] = ogs_strdup(route);
+
+            if (!ul_pdr->ipv4_framed_routes) {
+                ul_pdr->ipv4_framed_routes =
+                    ogs_calloc(OGS_MAX_NUM_OF_FRAMED_ROUTES_IN_PDI,
+                               sizeof(ul_pdr->ipv4_framed_routes[0]));
+                ogs_assert(ul_pdr->ipv4_framed_routes);
+            }
+            ul_pdr->ipv4_framed_routes[i] = ogs_strdup(route);
+        }
+    }
+
+    if (sess->session.ipv6_framed_routes &&
+        sess->pfcp_node->up_function_features.frrt) {
+        int i = 0;
+        for (i = 0; i < OGS_MAX_NUM_OF_FRAMED_ROUTES_IN_PDI; i++) {
+            const char *route = sess->session.ipv6_framed_routes[i];
+            if (!route) break;
+
+            if (!dl_pdr->ipv6_framed_routes) {
+                dl_pdr->ipv6_framed_routes =
+                    ogs_calloc(OGS_MAX_NUM_OF_FRAMED_ROUTES_IN_PDI,
+                               sizeof(dl_pdr->ipv6_framed_routes[0]));
+                ogs_assert(dl_pdr->ipv6_framed_routes);
+            }
+            dl_pdr->ipv6_framed_routes[i] = ogs_strdup(route);
+
+            if (!ul_pdr->ipv6_framed_routes) {
+                ul_pdr->ipv6_framed_routes =
+                    ogs_calloc(OGS_MAX_NUM_OF_FRAMED_ROUTES_IN_PDI,
+                               sizeof(ul_pdr->ipv6_framed_routes[0]));
+                ogs_assert(ul_pdr->ipv6_framed_routes);
+            }
+            ul_pdr->ipv6_framed_routes[i] = ogs_strdup(route);
+        }
+    }
+
+    ogs_info("UE SUPI[%s] DNN[%s] IPv4[%s] IPv6[%s]",
+        smf_ue->supi, sess->session.name,
+        sess->ipv4 ? OGS_INET_NTOP(&sess->ipv4->addr, buf1) : "",
+        sess->ipv6 ? OGS_INET6_NTOP(&sess->ipv6->addr, buf2) : "");
+
+    /* Set UE-to-CP Flow-Description and Outer-Header-Creation */
+    up2cp_pdr->flow[up2cp_pdr->num_of_flow].fd = 1;
+    up2cp_pdr->flow[up2cp_pdr->num_of_flow].description =
+        (char *)"permit out 58 from ff02::2/128 to assigned";
+    up2cp_pdr->num_of_flow++;
+
+    ogs_assert(OGS_OK ==
+        ogs_pfcp_ip_to_outer_header_creation(
+            &ogs_gtp_self()->gtpu_ip,
+            &up2cp_far->outer_header_creation,
+            &up2cp_far->outer_header_creation_len));
+    up2cp_far->outer_header_creation.teid = sess->index;
+
+    /* Set UPF-N3 TEID & ADDR to the Default UL PDR */
+    ogs_assert(sess->pfcp_node);
+    if (sess->pfcp_node->up_function_features.ftup) {
+
+       /* TS 129 244 V16.5.0 8.2.3
+        *
+        * At least one of the V4 and V6 flags shall be set to "1",
+        * and both may be set to "1" for both scenarios:
+        *
+        * - when the CP function is providing F-TEID, i.e.
+        *   both IPv4 address field and IPv6 address field may be present;
+        *   or
+        * - when the UP function is requested to allocate the F-TEID,
+        *   i.e. when CHOOSE bit is set to "1",
+        *   and the IPv4 address and IPv6 address fields are not present.
+        */
+
+        ul_pdr->f_teid.ipv4 = 1;
+        ul_pdr->f_teid.ipv6 = 1;
+        ul_pdr->f_teid.ch = 1;
+        ul_pdr->f_teid.chid = 1;
+        ul_pdr->f_teid.choose_id = OGS_PFCP_DEFAULT_CHOOSE_ID;
+        ul_pdr->f_teid_len = 2;
+
+        cp2up_pdr->f_teid.ipv4 = 1;
+        cp2up_pdr->f_teid.ipv6 = 1;
+        cp2up_pdr->f_teid.ch = 1;
+        cp2up_pdr->f_teid_len = 1;
+
+        up2cp_pdr->f_teid.ipv4 = 1;
+        up2cp_pdr->f_teid.ipv6 = 1;
+        up2cp_pdr->f_teid.ch = 1;
+        up2cp_pdr->f_teid.chid = 1;
+        up2cp_pdr->f_teid.choose_id = OGS_PFCP_DEFAULT_CHOOSE_ID;
+        up2cp_pdr->f_teid_len = 2;
+    } else {
+        ogs_gtpu_resource_t *resource = NULL;
+        resource = ogs_pfcp_find_gtpu_resource(
+                &sess->pfcp_node->gtpu_resource_list,
+                sess->session.name, ul_pdr->src_if);
+        if (resource) {
+            ogs_user_plane_ip_resource_info_to_sockaddr(&resource->info,
+                &sess->upf_n3_addr, &sess->upf_n3_addr6);
+            if (resource->info.teidri)
+                sess->upf_n3_teid = OGS_PFCP_GTPU_INDEX_TO_TEID(
+                        ul_pdr->teid, resource->info.teidri,
+                        resource->info.teid_range);
+            else
+                sess->upf_n3_teid = ul_pdr->teid;
+        } else {
+            if (sess->pfcp_node->addr.ogs_sa_family == AF_INET)
+                ogs_assert(OGS_OK ==
+                    ogs_copyaddrinfo(
+                        &sess->upf_n3_addr, &sess->pfcp_node->addr));
+            else if (sess->pfcp_node->addr.ogs_sa_family == AF_INET6)
+                ogs_assert(OGS_OK ==
+                    ogs_copyaddrinfo(
+                        &sess->upf_n3_addr6, &sess->pfcp_node->addr));
+            else
+                ogs_assert_if_reached();
+
+            sess->upf_n3_teid = ul_pdr->teid;
+        }
+
+        ogs_assert(OGS_OK ==
+            ogs_pfcp_sockaddr_to_f_teid(
+                sess->upf_n3_addr, sess->upf_n3_addr6,
+                &ul_pdr->f_teid, &ul_pdr->f_teid_len));
+        ul_pdr->f_teid.teid = sess->upf_n3_teid;
+
+        ogs_assert(OGS_OK ==
+            ogs_pfcp_sockaddr_to_f_teid(
+                sess->upf_n3_addr, sess->upf_n3_addr6,
+                &cp2up_pdr->f_teid, &cp2up_pdr->f_teid_len));
+        cp2up_pdr->f_teid.teid = cp2up_pdr->teid;
+
+        ogs_assert(OGS_OK ==
+            ogs_pfcp_sockaddr_to_f_teid(
+                sess->upf_n3_addr, sess->upf_n3_addr6,
+                &up2cp_pdr->f_teid, &up2cp_pdr->f_teid_len));
+        up2cp_pdr->f_teid.teid = sess->upf_n3_teid;
+    }
+
+    dl_pdr->precedence = OGS_PFCP_DEFAULT_PDR_PRECEDENCE;
+    ul_pdr->precedence = OGS_PFCP_DEFAULT_PDR_PRECEDENCE;
+
+    cp2up_pdr->precedence = OGS_PFCP_CP2UP_PDR_PRECEDENCE;
+    up2cp_pdr->precedence = OGS_PFCP_UP2CP_PDR_PRECEDENCE;
+
+    ogs_assert(OGS_OK ==
+            smf_5gc_pfcp_send_session_establishment_request(sess, 0));
+
+    return true;
+}
+
+bool smf_npcf_smpolicycontrol_handle_create_with_ctf(
+        smf_sess_t *sess, int state, ogs_sbi_message_t *recvmsg)
+{
+    ogs_info("*****npcf-handler.c: smf_npcf_smpolicycontrol_handle_create_with_ctf()*****");
     int rv;
     
-
     smf_ue_t *smf_ue = NULL;
 
     OpenAPI_sm_policy_decision_t *SmPolicyDecision = NULL;
