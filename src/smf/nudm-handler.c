@@ -374,8 +374,8 @@ bool smf_nudm_sdm_handle_get(smf_sess_t *sess, ogs_sbi_stream_t *stream,
     // // TODO: discover and send CHF
     // ogs_info("########## Before discover and send of CHF ##########");
     // r = smf_sbi_discover_and_send(
-    //         OGS_SBI_SERVICE_TYPE_NPCF_SMPOLICYCONTROL, NULL,
-    //         smf_nchf_build_get, sess, NULL, 0, NULL);
+    //     OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING, NULL,
+    //     smf_nchf_build_get, sess, NULL, 0, NULL);
     // ogs_info("########## After discover and send of CHF ##########");
 
     return true;

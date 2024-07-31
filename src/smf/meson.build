@@ -68,6 +68,7 @@ libsmf_sources = files('''
     ngap-path.h
     metrics.h
     nchf-build.h
+    nchf-handler.h
 
     init.c
     event.c
@@ -108,6 +109,7 @@ libsmf_sources = files('''
     ngap-path.c
     metrics.c
     nchf-build.c
+    nchf-handler.c
 '''.split())
 
 libsmf = static_library('smf',

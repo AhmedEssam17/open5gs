@@ -25,6 +25,7 @@ extern "C" {
 #endif
 
 #include "context.h"
+#include "nchf-build.h"
 
 bool smf_npcf_smpolicycontrol_handle_create(
         smf_sess_t *sess, int state, ogs_sbi_message_t *recvmsg);

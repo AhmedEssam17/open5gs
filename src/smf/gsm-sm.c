@@ -36,6 +36,7 @@
 #include "ngap-path.h"
 #include "fd-path.h"
 #include "nchf-build.h"
+#include "nchf-handler.h"
 
 static uint8_t gtp_cause_from_diameter(uint8_t gtp_version,
         const uint32_t dia_err, const uint32_t *dia_exp_err)
@@ -600,11 +601,11 @@ void smf_gsm_state_wait_5gc_sm_policy_association(ogs_fsm_t *s, smf_event_t *e)
                 } else if (smf_npcf_smpolicycontrol_handle_create(
                         sess, state, sbi_message) == true) {
                             ogs_info("########## PCF handle create called #########");
-                        smf_sbi_discover_and_send(
-                                OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING, NULL,
-                                smf_nchf_build_get, sess, NULL, 0, NULL);
-                    OGS_FSM_TRAN(s,
-                        &smf_gsm_state_wait_pfcp_establishment);
+                        // smf_sbi_discover_and_send(
+                        //         OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING, NULL,
+                        //         smf_nchf_build_get, sess, NULL, 0, NULL);
+                    // OGS_FSM_TRAN(s,
+                    //     &smf_gsm_state_wait_pfcp_establishment);
                 } else {
                     ogs_error(
                         "smf_npcf_smpolicycontrol_handle_create() failed");
@@ -618,6 +619,21 @@ void smf_gsm_state_wait_5gc_sm_policy_association(ogs_fsm_t *s, smf_event_t *e)
                         sbi_message->h.resource.component[0]);
                 OGS_FSM_TRAN(s, smf_gsm_state_5gc_n1_n2_reject);
             END
+            break;
+        
+        CASE(OGS_SBI_SERVICE_NAME_NCHF_CONVERGEDCHARGING)
+            ogs_info("OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING in smf_gsm_state_wait_5gc_sm_policy_association");
+            if(smf_nchf_handle_get(sess, state, sbi_message)){
+                ogs_info("$$$$$$$$$$$$$$ Returned true from smf_nchf_handle_get $$$$$$$$$$$$$$");
+                OGS_FSM_TRAN(s,
+                        &smf_gsm_state_wait_pfcp_establishment);
+            }
+            else {
+                ogs_info("$$$$$$$$$$$$$$ Returned false from smf_nchf_handle_get $$$$$$$$$$$$$$");
+                ogs_error(
+                        "smf_nchf_handle_get() failed");
+                OGS_FSM_TRAN(s, smf_gsm_state_5gc_n1_n2_reject);
+            }
             break;
 
         DEFAULT
