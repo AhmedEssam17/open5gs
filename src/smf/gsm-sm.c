@@ -601,11 +601,10 @@ void smf_gsm_state_wait_5gc_sm_policy_association(ogs_fsm_t *s, smf_event_t *e)
                 } else if (smf_npcf_smpolicycontrol_handle_create(
                         sess, state, sbi_message) == true) {
                             ogs_info("########## PCF handle create called #########");
-                        // smf_sbi_discover_and_send(
-                        //         OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING, NULL,
-                        //         smf_nchf_build_get, sess, NULL, 0, NULL);
-                    // OGS_FSM_TRAN(s,
-                    //     &smf_gsm_state_wait_pfcp_establishment);
+                            ogs_info("$$$$$$$$$$$$$$ Calling CHF Discover and Send $$$$$$$$$$$$$$");
+                            smf_sbi_discover_and_send(
+                                    OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING, NULL,
+                                    smf_nchf_build_get, sess, NULL, 0, NULL);
                 } else {
                     ogs_error(
                         "smf_npcf_smpolicycontrol_handle_create() failed");
