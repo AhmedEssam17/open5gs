@@ -98,6 +98,7 @@ ogs_pkbuf_t *smf_n4_build_session_establishment_request(
     /* Create URR */
     i = 0;
     ogs_list_for_each(&sess->pfcp.urr_list, urr) {
+        ogs_info("^^^^^^^^^^^^^ ogs_pfcp_build_create_urr ^^^^^^^^^^^^^");
         ogs_pfcp_build_create_urr(&req->create_urr[i], i, urr);
         i++;
     }

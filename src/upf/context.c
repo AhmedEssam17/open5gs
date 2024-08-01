@@ -708,6 +708,7 @@ void upf_sess_urr_acc_add(upf_sess_t *sess, ogs_pfcp_urr_t *urr, size_t size, bo
         report.num_of_usage_report = 1;
         upf_sess_urr_acc_snapshot(sess, urr);
 
+        ogs_info("XXXXXvoid upf_sess_urr_acc_add(upf_sess_t *sess, ogs_pfcp_urr_t *urr, size_t size, bool is_uplink)>> upf_pfcp_send_session_report_request(sess, &report));XXXXX");
         ogs_assert(OGS_OK ==
             upf_pfcp_send_session_report_request(sess, &report));
         /* Start new report period/iteration: */
@@ -805,6 +806,7 @@ static void upf_sess_urr_acc_timers_cb(void *data)
         report.num_of_usage_report = 1;
         upf_sess_urr_acc_snapshot(sess, urr);
 
+        ogs_info("XXXXXstatic void upf_sess_urr_acc_timers_cb(void *data)>> upf_pfcp_send_session_report_request(sess, &report));XXXXX");
         ogs_assert(OGS_OK ==
             upf_pfcp_send_session_report_request(sess, &report));
     }

@@ -238,6 +238,8 @@ static void _gtpv1_tun_recv_common_cb(
         if (pdr->qer && pdr->qer->qfi)
             report.downlink_data.qfi = pdr->qer->qfi; /* for 5GC */
 
+        ogs_info("XXXXXLine 240: static void _gtpv1_tun_recv_common_cb>> upf_pfcp_send_session_report_request(sess, &report));XXXXX");
+
         ogs_assert(OGS_OK ==
             upf_pfcp_send_session_report_request(sess, &report));
     }
@@ -363,6 +365,8 @@ static void _gtpv1_u_recv_cb(short when, ogs_socket_t fd, void *data)
                 ogs_assert(far->sess);
                 sess = UPF_SESS(far->sess);
                 ogs_assert(sess);
+
+                ogs_info("XXXXXLine 370: static void _gtpv1_u_recv_cb(short when, ogs_socket_t fd, void *data)>> upf_pfcp_send_session_report_request(sess, &report));XXXXX");
 
                 ogs_assert(OGS_OK ==
                     upf_pfcp_send_session_report_request(sess, &report));
@@ -669,6 +673,8 @@ static void _gtpv1_u_recv_cb(short when, ogs_socket_t fd, void *data)
                 report.downlink_data.pdr_id = pdr->id;
                 if (pdr->qer && pdr->qer->qfi)
                     report.downlink_data.qfi = pdr->qer->qfi; /* for 5GC */
+
+                ogs_info("XXXXXLine 677: static void _gtpv1_u_recv_cb(short when, ogs_socket_t fd, void *data)>> upf_pfcp_send_session_report_request(sess, &report));XXXXX");
 
                 ogs_assert(OGS_OK ==
                     upf_pfcp_send_session_report_request(sess, &report));

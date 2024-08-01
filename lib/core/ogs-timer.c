@@ -94,16 +94,31 @@ ogs_timer_t *ogs_timer_add(
     return timer;
 }
 
+static ogs_timer_t *ogs_timer_cycle(ogs_timer_mgr_t *manager, ogs_timer_t *timer)
+{
+    ogs_assert(manager);
+    return ogs_pool_cycle(&manager->pool, timer);
+}
+
 void ogs_timer_delete_debug(ogs_timer_t *timer, const char *file_line)
 {
-    ogs_timer_mgr_t *manager;
-    ogs_assert(timer);
-    manager = timer->manager;
-    ogs_assert(manager);
+    if (timer) {
+        ogs_timer_mgr_t *manager;
+        manager = timer->manager;
+        ogs_assert(manager);
+        timer = ogs_timer_cycle(manager, timer);
+        if (!timer) {
+            ogs_fatal("ogs_timer_delete() failed in %s", file_line);
+            ogs_assert_if_reached();
+        }
 
-    ogs_timer_stop(timer);
+        ogs_timer_stop(timer);
 
-    ogs_pool_free(&manager->pool, timer);
+        ogs_pool_free(&manager->pool, timer);
+    }
+    else {
+        ogs_warn("ogs_timer_delete() was given a NULL reference to a timer");
+    }
 }
 
 void ogs_timer_start_debug(
