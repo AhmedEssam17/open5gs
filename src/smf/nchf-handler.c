@@ -18,6 +18,7 @@ bool smf_nchf_handle_get(smf_sess_t *sess, int state, ogs_sbi_message_t *recvmsg
     ogs_pfcp_pdr_t *cp2up_pdr = NULL;
     ogs_pfcp_pdr_t *up2cp_pdr = NULL;
     ogs_pfcp_far_t *up2cp_far = NULL;
+    // ogs_pfcp_urr_t *urr = NULL;
 
 
     smf_ue = smf_ue_find_by_id(sess->smf_ue_id);
@@ -27,6 +28,7 @@ bool smf_nchf_handle_get(smf_sess_t *sess, int state, ogs_sbi_message_t *recvmsg
      * Send PFCP Session Establiashment Request to the UPF
      *********************************************************************/
     ogs_info("XXXXXXXX Send PFCP Session Establiashment Request to the UPF XXXXXXXX");
+    
     /* Select UPF based on UE Location Information */
     smf_sess_select_upf(sess);
 
@@ -37,12 +39,14 @@ bool smf_nchf_handle_get(smf_sess_t *sess, int state, ogs_sbi_message_t *recvmsg
         return false;
     }
 
+
     /* Remove all previous QoS flow */
     smf_bearer_remove_all(sess);
 
     /* Setup Default QoS flow */
     qos_flow = smf_qos_flow_add(sess);
     ogs_assert(qos_flow);
+
 
     /* Setup CP/UP Data Forwarding PDR/FAR */
     smf_sess_create_cp_up_data_forwarding(sess);

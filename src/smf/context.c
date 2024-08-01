@@ -1930,6 +1930,7 @@ smf_bearer_t *smf_qos_flow_add(smf_sess_t *sess)
     ogs_pfcp_far_t *ul_far = NULL;
     ogs_pfcp_urr_t *urr = NULL;
     ogs_pfcp_qer_t *qer = NULL;
+    ogs_pfcp_urr_t *ctf_urr = NULL;
 
     ogs_assert(sess);
 
@@ -2005,17 +2006,33 @@ smf_bearer_t *smf_qos_flow_add(smf_sess_t *sess)
 
     ul_far->apply_action = OGS_PFCP_APPLY_ACTION_FORW;
 
-    /* URR */
+    /* URR 1*/
     urr = ogs_pfcp_urr_add(&sess->pfcp);
     ogs_assert(urr);
     qos_flow->urr = urr;
-
+    ogs_info("^^^^^smf_qos_flow_add : urr->id %d ^^^^^^^^^^",urr->id);
     urr->meas_method = OGS_PFCP_MEASUREMENT_METHOD_VOLUME;
     urr->rep_triggers.volume_threshold = 1;
     urr->vol_threshold.tovol = 1;
     urr->vol_threshold.total_volume = 1024*1024*100;
 
     ogs_pfcp_pdr_associate_urr(dl_pdr, urr);
+    
+    if(smf_self()->ctf_config.enabled == SMF_CTF_ENABLED_YES) {
+        /* URR 2*/
+        ctf_urr = ogs_pfcp_urr_add(&sess->pfcp);
+        ogs_assert(ctf_urr);
+        qos_flow->urr = ctf_urr;
+        ogs_info("^^^^^smf_qos_flow_add : urr->id %d ^^^^^^^^^^",ctf_urr->id);
+        ctf_urr->meas_method = OGS_PFCP_MEASUREMENT_METHOD_DURATION;
+        ctf_urr->rep_triggers.time_threshold = 1;
+        ctf_urr->time_threshold = ogs_pfcp_self()->usageLoggerState.reporting_period_sec;
+        ctf_urr->meas_info.istm = 1;
+
+        ogs_pfcp_pdr_associate_urr(ul_pdr, urr);
+        ogs_pfcp_pdr_associate_urr(dl_pdr, ctf_urr);
+        ogs_pfcp_pdr_associate_urr(ul_pdr, ctf_urr);
+    }
 
     /* QER */
     qer = ogs_pfcp_qer_add(&sess->pfcp);
@@ -2386,7 +2403,7 @@ smf_bearer_t *smf_bearer_add(smf_sess_t *sess)
     if (ogs_pfcp_self()->usageLoggerState.enabled) {
         urr = ogs_pfcp_urr_add(&sess->pfcp);
         ogs_assert(urr);
-
+        ogs_info("^^^^^^^smf_bearer_add : urr->id %d^^^^^^",urr->id);
         urr->meas_method = OGS_PFCP_MEASUREMENT_METHOD_DURATION;
         urr->rep_triggers.time_threshold = 1;
         urr->time_threshold = ogs_pfcp_self()->usageLoggerState.reporting_period_sec;

@@ -159,6 +159,7 @@ uint32_t smf_gy_handle_cca_initial_request(
 
     if (!bearer->urr)
         bearer->urr = ogs_pfcp_urr_add(&sess->pfcp);
+    ogs_info("^^^^^smf_gy_handle_cca_initial_request : urr->id %d ^^^^^^^^^^",bearer->urr->id);
     ogs_assert(bearer->urr);
 
     /* Configure based on what we received from OCS: */

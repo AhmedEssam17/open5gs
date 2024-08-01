@@ -1750,6 +1750,7 @@ ogs_pfcp_urr_t *ogs_pfcp_urr_add(ogs_pfcp_sess_t *sess)
     ogs_assert(urr->id > 0 && urr->id <= OGS_MAX_NUM_OF_URR);
 
     urr->sess = sess;
+    
     ogs_list_add(&sess->urr_list, urr);
 
     return urr;
@@ -1762,9 +1763,11 @@ ogs_pfcp_urr_t *ogs_pfcp_urr_find(
 
     ogs_assert(sess);
 
-    ogs_list_for_each(&sess->urr_list, urr)
-        if (urr->id == id) return urr;
+    ogs_list_for_each(&sess->urr_list, urr){
+    ogs_info("!!!!!! urr->id %d ,,,, id %d !!!! ",urr->id,id) ;
+        if (urr->id == id)  return urr;
 
+    }
     return NULL;
 }
 

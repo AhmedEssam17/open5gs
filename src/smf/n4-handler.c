@@ -1386,9 +1386,10 @@ uint8_t smf_n4_handle_session_report_request(
             }
             break;
         case -1:
-            ogs_error("No Gy Diameter Peer");
-            cause_value = OGS_PFCP_CAUSE_NO_RESOURCES_AVAILABLE;
             break;
+            // ogs_error("No Gy Diameter Peer");
+            // cause_value = OGS_PFCP_CAUSE_NO_RESOURCES_AVAILABLE;
+            // break;
         /* default: continue below */
         }
     }
