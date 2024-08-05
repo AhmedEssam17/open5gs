@@ -5,6 +5,19 @@ bool smf_nchf_handle_get(smf_sess_t *sess, int state, ogs_sbi_message_t *recvmsg
 {
     ogs_info("$$$$$$$$$$$$$$ nchf-handler.c: smf_nchf_handle_get() $$$$$$$$$$$$$$");
 
+    ogs_info("++++++++++++++ Printing recvmsg ++++++++++++++");
+    ogs_info("recvmsg->h.uri = %s", recvmsg->h.uri);
+    ogs_info("recvmsg->h.method = %s", recvmsg->h.method);
+    ogs_info("recvmsg->h.service.name = %s", recvmsg->h.service.name);
+    ogs_info("recvmsg->http.location = %s", recvmsg->http.location);
+    ogs_info("recvmsg->res_status = %d", recvmsg->res_status);
+    ogs_info("++++++++++++++ End of recvmsg ++++++++++++++");
+
+    // TODO: Check for response failure
+    if(recvmsg->res_status != OGS_SBI_HTTP_STATUS_CREATED){
+        ogs_fatal("CHF bad response !+!_@+!_!+!_!+!_!!+");
+    }
+
     ogs_assert(sess);
 
     char buf1[OGS_ADDRSTRLEN];
@@ -245,6 +258,8 @@ bool smf_nchf_handle_get(smf_sess_t *sess, int state, ogs_sbi_message_t *recvmsg
             smf_5gc_pfcp_send_session_establishment_request(sess, 0));
 
     ogs_info("$$$$$$$$$$$$$$ End of smf_nchf_handle_get() $$$$$$$$$$$$$$");
+
+    
 
     return true;
 }

@@ -25,6 +25,7 @@ bool smf_nudm_sdm_handle_get(smf_sess_t *sess, ogs_sbi_stream_t *stream,
         ogs_sbi_message_t *recvmsg)
 {
     ogs_info("*****nudm-handler.c: smf_nudm_sdm_handle_get()*****");
+
     int r;
     char *strerror = NULL;
     uint8_t cause_value = 0;

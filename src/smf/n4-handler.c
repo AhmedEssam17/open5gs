@@ -1363,9 +1363,11 @@ uint8_t smf_n4_handle_session_report_request(
             ogs_pfcp_parse_volume_measurement(
                     &volume, &use_rep->volume_measurement);
             if (volume.ulvol)
-                sess->gy.ul_octets += volume.uplink_volume;
+                // sess->gy.ul_octets += volume.uplink_volume;
+                sess->gy.ul_octets += 1;
             if (volume.dlvol)
-                sess->gy.dl_octets += volume.downlink_volume;
+                // sess->gy.dl_octets += volume.downlink_volume;
+                sess->gy.dl_octets += 1;
             sess->gy.duration += use_rep->duration_measurement.u32;
             ogs_pfcp_parse_usage_report_trigger(
                     &rep_trig, &use_rep->usage_report_trigger);

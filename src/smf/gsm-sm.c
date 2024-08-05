@@ -944,6 +944,10 @@ void smf_gsm_state_operational(ogs_fsm_t *s, smf_event_t *e)
             if (pfcp_cause != OGS_PFCP_CAUSE_REQUEST_ACCEPTED) {
                OGS_FSM_TRAN(s, smf_gsm_state_wait_pfcp_deletion);
             }
+            else {
+                smf_nchf_build_and_send(OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING, smf_nchf_build_report, sess, 0, NULL);
+            }
+
             break;
 
         default:
@@ -1027,7 +1031,7 @@ void smf_gsm_state_operational(ogs_fsm_t *s, smf_event_t *e)
 
         SWITCH(sbi_message->h.service.name)
         CASE(OGS_SBI_SERVICE_NAME_NCHF_CONVERGEDCHARGING)
-            ogs_info("OGS_SBI_SERVICE_NAME_NCHF_CONVERGEDCHARGING");
+            ogs_info("OGS_SBI_SERVICE_NAME_NCHF_CONVERGEDCHARGING -- sbi");
             break;
 
         CASE(OGS_SBI_SERVICE_NAME_NPCF_SMPOLICYCONTROL)
