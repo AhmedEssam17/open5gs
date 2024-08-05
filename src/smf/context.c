@@ -2023,7 +2023,6 @@ smf_bearer_t *smf_qos_flow_add(smf_sess_t *sess)
         ctf_urr = ogs_pfcp_urr_add(&sess->pfcp);
         ogs_assert(ctf_urr);
         qos_flow->urr = ctf_urr;
-        ogs_info("^^^^^smf_qos_flow_add : urr->id %d ^^^^^^^^^^",ctf_urr->id);
         ctf_urr->meas_method = OGS_PFCP_MEASUREMENT_METHOD_DURATION;
         ctf_urr->rep_triggers.time_threshold = 1;
         ctf_urr->time_threshold = ogs_pfcp_self()->usageLoggerState.reporting_period_sec;
