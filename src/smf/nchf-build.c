@@ -113,9 +113,6 @@ ogs_sbi_request_t *smf_nchf_build_report(smf_sess_t *sess, void *data){
 
     ogs_info("@@@@@@@@@@@@ nchf-build.c: smf_nchf_build_report() @@@@@@@@@@@@");
 
-    ogs_info("^^^^^^^ sess->gy.ul_octets = %ld", sess->gy.ul_octets);
-    ogs_info("^^^^^^^ sess->gy.dl_octets = %ld", sess->gy.dl_octets);
-
     ogs_sbi_message_t message;
     ogs_sbi_header_t header;
     ogs_sbi_request_t *request = NULL;
@@ -228,28 +225,34 @@ ogs_sbi_request_t *smf_nchf_build_report(smf_sess_t *sess, void *data){
     uint64_t uplink = sess->gy.ul_octets;
     uint64_t downlink = sess->gy.dl_octets;
     uint64_t totalvolume = uplink+downlink;
+    char* triggertimestamp  = ogs_sbi_gmtime_string(sess->ue_location_timestamp);
+    char* quotaindicator = OpenAPI_quota_management_indicator_any_of_ToString(OpenAPI_quota_management_indicator_any_of_ONLINE_CHARGING);
+    /****************************************** */
+    char* triggertype  = NULL;
+    triggertype = OpenAPI_trigger_type_any_of_ToString(OpenAPI_trigger_type_any_of_QUOTA_THRESHOLD);
+        if( sess->pfcp_report_request->usage_report[0].usage_report_trigger.u24 & (1 << 20 ) ){
+            triggertype =  OpenAPI_trigger_type_any_of_ToString(OpenAPI_trigger_type_any_of_START_OF_SERVICE_DATA_FLOW);
+        }
+     
+    char* triggercategory  = OpenAPI_trigger_category_any_of_ToString(OpenAPI_trigger_category_any_of_IMMEDIATE_REPORT);
 
-    OpenAPI_used_unit_container_t *used_unit_container = OpenAPI_used_unit_container_create(
-    0, 0,
-    NULL,
-    NULL,
-    NULL,
-    0,
-    0,
-    1,
-    totalvolume,
-    1,
-    uplink,
-    1,
-    downlink,
-    0,
-    0,
-    NULL,
-    0,
-    NULL,
-    NULL,
-    NULL
-);
+
+    OpenAPI_trigger_t *trigger = OpenAPI_trigger_create(triggertype,triggercategory,0,0,0,0,0,0,0,0,0,0,NULL);
+    
+    OpenAPI_list_t *trigger_list = OpenAPI_list_create();
+    OpenAPI_list_add(trigger_list, trigger);
+   
+   
+   /****************************************** */
+   
+    OpenAPI_used_unit_container_t *used_unit_container = NULL;
+    if( sess->pfcp_report_request->usage_report[0].usage_report_trigger.u24 & (1 << 20 )   ){
+    used_unit_container = OpenAPI_used_unit_container_create(0, 0, quotaindicator , trigger_list,triggertimestamp, 0, 0,0,0,0,0,0,0, 0, 0, NULL, 0, NULL, NULL, NULL);
+    } else {
+    used_unit_container = OpenAPI_used_unit_container_create(0, 0, quotaindicator , trigger_list,triggertimestamp, 0, 0,1,totalvolume,1, uplink,1, downlink, 0, 0, NULL, 0, NULL, NULL, NULL);
+
+    }
+
 
     OpenAPI_list_t *used_unit_container_list = OpenAPI_list_create();
     OpenAPI_list_add(used_unit_container_list, used_unit_container);
@@ -262,8 +265,7 @@ ogs_sbi_request_t *smf_nchf_build_report(smf_sess_t *sess, void *data){
     OpenAPI_list_add(multiple_unit_usage_list, multiple_unit_usage);
 
     ChargingDataRequest.multiple_unit_usage = multiple_unit_usage_list;
-
-
+    ChargingDataRequest.triggers = trigger_list;
     // ------------ End of (Volume -- Multiple Unit Usage) --------------
 
 
@@ -277,26 +279,26 @@ ogs_sbi_request_t *smf_nchf_build_report(smf_sess_t *sess, void *data){
     return request;
 }
 
-bool smf_nchf_build_and_send(ogs_sbi_service_type_e service_type,
-        ogs_sbi_request_t *(*build)(smf_sess_t *sess, void *data),
-        smf_sess_t *sess, int state, void *data)
-{
-    ogs_info("@@@@@@@@@@@@ nchf-build.c: smf_nchf_build_and_send() @@@@@@@@@@@@");
+// bool smf_nchf_build_and_send(ogs_sbi_service_type_e service_type,
+//         ogs_sbi_request_t *(*build)(smf_sess_t *sess, void *data),
+//         smf_sess_t *sess, int state, void *data)
+// {
+//     ogs_info("@@@@@@@@@@@@ nchf-build.c: smf_nchf_build_and_send() @@@@@@@@@@@@");
 
-    ogs_sbi_xact_t *xact = NULL;
-    ogs_sbi_nf_instance_t *nf_instance = NULL;
+//     ogs_sbi_xact_t *xact = NULL;
+//     ogs_sbi_nf_instance_t *nf_instance = NULL;
 
-    nf_instance = ogs_sbi_nf_instance_find_by_service_type(service_type, OpenAPI_nf_type_CHF);
+//     nf_instance = ogs_sbi_nf_instance_find_by_service_type(service_type, OpenAPI_nf_type_CHF);
 
-    xact = ogs_sbi_xact_add(
-            sess->id, &sess->sbi, service_type, NULL,
-            (ogs_sbi_build_f)build, sess, data);
-    if (!xact) {
-        ogs_error("smf_sbi_discover_and_send() failed");
-        return OGS_ERROR;
-    }
+//     xact = ogs_sbi_xact_add(
+//             sess->id, &sess->sbi, service_type, NULL,
+//             (ogs_sbi_build_f)build, sess, data);
+//     if (!xact) {
+//         ogs_error("smf_sbi_discover_and_send() failed");
+//         return OGS_ERROR;
+//     }
 
-    xact->state = state;
+//     xact->state = state;
 
-    return smf_sbi_send_request(nf_instance, xact);
-}
+//     return smf_sbi_send_request(nf_instance, xact);
+// }

@@ -7,7 +7,7 @@
 OpenAPI_used_unit_container_t *OpenAPI_used_unit_container_create(
     bool is_service_id,
     int service_id,
-    OpenAPI_quota_management_indicator_t *quota_management_indicator,
+    char *quota_management_indicator,
     OpenAPI_list_t *triggers,
     char *trigger_timestamp,
     bool is_time,
@@ -62,7 +62,7 @@ void OpenAPI_used_unit_container_free(OpenAPI_used_unit_container_t *used_unit_c
         return;
     }
     if (used_unit_container->quota_management_indicator) {
-        OpenAPI_quota_management_indicator_free(used_unit_container->quota_management_indicator);
+        ogs_free(used_unit_container->quota_management_indicator);
         used_unit_container->quota_management_indicator = NULL;
     }
     if (used_unit_container->triggers) {
@@ -116,17 +116,24 @@ cJSON *OpenAPI_used_unit_container_convertToJSON(OpenAPI_used_unit_container_t *
     }
     }
 
+    // if (used_unit_container->quota_management_indicator) {
+    // cJSON *quota_management_indicator_local_JSON = OpenAPI_quota_management_indicator_convertToJSON(used_unit_container->quota_management_indicator);
+    // if (quota_management_indicator_local_JSON == NULL) {
+    //     ogs_error("OpenAPI_used_unit_container_convertToJSON() failed [quota_management_indicator]");
+    //     goto end;
+    // }
+    // cJSON_AddItemToObject(item, "quotaManagementIndicator", quota_management_indicator_local_JSON);
+    // if (item->child == NULL) {
+    //     ogs_error("OpenAPI_used_unit_container_convertToJSON() failed [quota_management_indicator]");
+    //     goto end;
+    // }
     if (used_unit_container->quota_management_indicator) {
-    cJSON *quota_management_indicator_local_JSON = OpenAPI_quota_management_indicator_convertToJSON(used_unit_container->quota_management_indicator);
-    if (quota_management_indicator_local_JSON == NULL) {
+    if (cJSON_AddStringToObject(item, "quotaManagementIndicator", used_unit_container->quota_management_indicator) == NULL) {
         ogs_error("OpenAPI_used_unit_container_convertToJSON() failed [quota_management_indicator]");
         goto end;
     }
-    cJSON_AddItemToObject(item, "quotaManagementIndicator", quota_management_indicator_local_JSON);
-    if (item->child == NULL) {
-        ogs_error("OpenAPI_used_unit_container_convertToJSON() failed [quota_management_indicator]");
-        goto end;
-    }
+
+
     }
 
     if (used_unit_container->triggers) {
@@ -414,7 +421,7 @@ OpenAPI_used_unit_container_t *OpenAPI_used_unit_container_parseFromJSON(cJSON *
     used_unit_container_local_var = OpenAPI_used_unit_container_create (
         service_id ? true : false,
         service_id ? service_id->valuedouble : 0,
-        quota_management_indicator ? quota_management_indicator_local_nonprim : NULL,
+        quota_management_indicator && !cJSON_IsNull(quota_management_indicator) ? ogs_strdup(quota_management_indicator->valuestring) : NULL,
         triggers ? triggersList : NULL,
         trigger_timestamp && !cJSON_IsNull(trigger_timestamp) ? ogs_strdup(trigger_timestamp->valuestring) : NULL,
         time ? true : false,

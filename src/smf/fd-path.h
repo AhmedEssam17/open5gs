@@ -25,7 +25,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+ogs_pfcp_session_report_request_t srag;
 typedef struct gtp_xact_s gtp_xact_t;
 
 int smf_fd_init(void);

@@ -219,10 +219,14 @@ typedef struct smf_bearer_s {
     ogs_pool_id_t   sess_id;
 } smf_bearer_t;
 
+
+
 #define SMF_SESS(pfcp_sess) ogs_container_of(pfcp_sess, smf_sess_t, pfcp)
 typedef struct smf_sess_s {
     ogs_sbi_object_t sbi;
     ogs_pool_id_t id;
+
+    ogs_pfcp_session_report_request_t* pfcp_report_request; 
 
     uint32_t        index;              /* An index of this node */
     ogs_pool_id_t   *smf_n4_seid_node;  /* A node of SMF-N4-SEID */
@@ -362,6 +366,7 @@ typedef struct smf_sess_s {
 
     ogs_pfcp_ue_ip_t *ipv4;
     ogs_pfcp_ue_ip_t *ipv6;
+
 
     /* RAT Type */
     uint8_t gtp_rat_type;

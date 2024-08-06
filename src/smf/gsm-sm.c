@@ -945,7 +945,15 @@ void smf_gsm_state_operational(ogs_fsm_t *s, smf_event_t *e)
                OGS_FSM_TRAN(s, smf_gsm_state_wait_pfcp_deletion);
             }
             else {
-                smf_nchf_build_and_send(OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING, smf_nchf_build_report, sess, 0, NULL);
+                if(  sess->pfcp_report_request->usage_report[0].usage_report_trigger.u24 & (1 << 20 )  || 
+                     sess->pfcp_report_request->usage_report[0].usage_report_trigger.u24 & (1 << 17 )      )
+                 {
+                    smf_sbi_discover_and_send(
+                                    OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING, NULL,
+                                    smf_nchf_build_report, sess, NULL, 0, NULL);
+                 }
+
+            
             }
 
             break;

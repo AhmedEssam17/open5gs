@@ -5,8 +5,8 @@
 #include "trigger.h"
 
 OpenAPI_trigger_t *OpenAPI_trigger_create(
-    OpenAPI_trigger_type_t *trigger_type,
-    OpenAPI_trigger_category_t *trigger_category,
+    char *trigger_type,
+    char *trigger_category,
     bool is_time_limit,
     int time_limit,
     bool is_volume_limit,
@@ -48,11 +48,11 @@ void OpenAPI_trigger_free(OpenAPI_trigger_t *trigger)
         return;
     }
     if (trigger->trigger_type) {
-        OpenAPI_trigger_type_free(trigger->trigger_type);
+        ogs_free(trigger->trigger_type);
         trigger->trigger_type = NULL;
     }
     if (trigger->trigger_category) {
-        OpenAPI_trigger_category_free(trigger->trigger_category);
+        ogs_free(trigger->trigger_category);
         trigger->trigger_category = NULL;
     }
     if (trigger->tariff_time_change) {
@@ -73,35 +73,46 @@ cJSON *OpenAPI_trigger_convertToJSON(OpenAPI_trigger_t *trigger)
     }
 
     item = cJSON_CreateObject();
-    if (!trigger->trigger_type) {
-        ogs_error("OpenAPI_trigger_convertToJSON() failed [trigger_type]");
-        return NULL;
-    }
-    cJSON *trigger_type_local_JSON = OpenAPI_trigger_type_convertToJSON(trigger->trigger_type);
-    if (trigger_type_local_JSON == NULL) {
+    if (trigger->trigger_type) {
+    if (cJSON_AddStringToObject(item, "triggerType", trigger->trigger_type) == NULL) {
         ogs_error("OpenAPI_trigger_convertToJSON() failed [trigger_type]");
         goto end;
     }
-    cJSON_AddItemToObject(item, "triggerType", trigger_type_local_JSON);
-    if (item->child == NULL) {
-        ogs_error("OpenAPI_trigger_convertToJSON() failed [trigger_type]");
+    }
+    // if (!trigger->trigger_type) {
+    //     ogs_error("OpenAPI_trigger_convertToJSON() failed [trigger_type]");
+    //     return NULL;
+    // }
+    // cJSON *trigger_type_local_JSON = OpenAPI_trigger_type_convertToJSON(trigger->trigger_type);
+    // if (trigger_type_local_JSON == NULL) {
+    //     ogs_error("OpenAPI_trigger_convertToJSON() failed [trigger_type]");
+    //     goto end;
+    // }
+    // cJSON_AddItemToObject(item, "triggerType", trigger_type_local_JSON);
+    // if (item->child == NULL) {
+    //     ogs_error("OpenAPI_trigger_convertToJSON() failed [trigger_type]");
+    //     goto end;
+    // }
+    if (trigger->trigger_category) {
+    if (cJSON_AddStringToObject(item, "triggerCategory", trigger->trigger_category) == NULL) {
+        ogs_error("OpenAPI_trigger_convertToJSON() failed [trigger_category]");
         goto end;
     }
-
-    if (!trigger->trigger_category) {
-        ogs_error("OpenAPI_trigger_convertToJSON() failed [trigger_category]");
-        return NULL;
     }
-    cJSON *trigger_category_local_JSON = OpenAPI_trigger_category_convertToJSON(trigger->trigger_category);
-    if (trigger_category_local_JSON == NULL) {
-        ogs_error("OpenAPI_trigger_convertToJSON() failed [trigger_category]");
-        goto end;
-    }
-    cJSON_AddItemToObject(item, "triggerCategory", trigger_category_local_JSON);
-    if (item->child == NULL) {
-        ogs_error("OpenAPI_trigger_convertToJSON() failed [trigger_category]");
-        goto end;
-    }
+    // if (!trigger->trigger_category) {
+    //     ogs_error("OpenAPI_trigger_convertToJSON() failed [trigger_category]");
+    //     return NULL;
+    // }
+    // cJSON *trigger_category_local_JSON = OpenAPI_trigger_category_convertToJSON(trigger->trigger_category);
+    // if (trigger_category_local_JSON == NULL) {
+    //     ogs_error("OpenAPI_trigger_convertToJSON() failed [trigger_category]");
+    //     goto end;
+    // }
+    // cJSON_AddItemToObject(item, "triggerCategory", trigger_category_local_JSON);
+    // if (item->child == NULL) {
+    //     ogs_error("OpenAPI_trigger_convertToJSON() failed [trigger_category]");
+    //     goto end;
+    // }
 
     if (trigger->is_time_limit) {
     if (cJSON_AddNumberToObject(item, "timeLimit", trigger->time_limit) == NULL) {
@@ -154,36 +165,53 @@ OpenAPI_trigger_t *OpenAPI_trigger_parseFromJSON(cJSON *triggerJSON)
     OpenAPI_trigger_t *trigger_local_var = NULL;
     OpenAPI_lnode_t *node = NULL;
     cJSON *trigger_type = NULL;
-    OpenAPI_trigger_type_t *trigger_type_local_nonprim = NULL;
+    char *trigger_type_local_nonprim = NULL;
     cJSON *trigger_category = NULL;
-    OpenAPI_trigger_category_t *trigger_category_local_nonprim = NULL;
+    char *trigger_category_local_nonprim = NULL;
     cJSON *time_limit = NULL;
     cJSON *volume_limit = NULL;
     cJSON *volume_limit64 = NULL;
     cJSON *event_limit = NULL;
     cJSON *max_number_ofccc = NULL;
     cJSON *tariff_time_change = NULL;
+
     trigger_type = cJSON_GetObjectItemCaseSensitive(triggerJSON, "triggerType");
-    if (!trigger_type) {
+    if (trigger_type) {
+    if (!cJSON_IsString(trigger_type) && !cJSON_IsNull(trigger_type)) {
         ogs_error("OpenAPI_trigger_parseFromJSON() failed [trigger_type]");
         goto end;
     }
-    trigger_type_local_nonprim = OpenAPI_trigger_type_parseFromJSON(trigger_type);
-    if (!trigger_type_local_nonprim) {
-        ogs_error("OpenAPI_trigger_type_parseFromJSON failed [trigger_type]");
-        goto end;
     }
 
-    trigger_category = cJSON_GetObjectItemCaseSensitive(triggerJSON, "triggerCategory");
-    if (!trigger_category) {
+    // trigger_type = cJSON_GetObjectItemCaseSensitive(triggerJSON, "triggerType");
+    // if (!trigger_type) {
+    //     ogs_error("OpenAPI_trigger_parseFromJSON() failed [trigger_type]");
+    //     goto end;
+    // }
+    // trigger_type_local_nonprim = OpenAPI_trigger_type_parseFromJSON(trigger_type);
+    // if (!trigger_type_local_nonprim) {
+    //     ogs_error("OpenAPI_trigger_type_parseFromJSON failed [trigger_type]");
+    //     goto end;
+    // }
+
+    trigger_category = cJSON_GetObjectItemCaseSensitive(triggerJSON, "trigger_category");
+    if (trigger_category) {
+    if (!cJSON_IsString(trigger_category) && !cJSON_IsNull(trigger_category)) {
         ogs_error("OpenAPI_trigger_parseFromJSON() failed [trigger_category]");
         goto end;
     }
-    trigger_category_local_nonprim = OpenAPI_trigger_category_parseFromJSON(trigger_category);
-    if (!trigger_category_local_nonprim) {
-        ogs_error("OpenAPI_trigger_category_parseFromJSON failed [trigger_category]");
-        goto end;
     }
+
+    // trigger_category = cJSON_GetObjectItemCaseSensitive(triggerJSON, "triggerCategory");
+    // if (!trigger_category) {
+    //     ogs_error("OpenAPI_trigger_parseFromJSON() failed [trigger_category]");
+    //     goto end;
+    // }
+    // trigger_category_local_nonprim = OpenAPI_trigger_category_parseFromJSON(trigger_category);
+    // if (!trigger_category_local_nonprim) {
+    //     ogs_error("OpenAPI_trigger_category_parseFromJSON failed [trigger_category]");
+    //     goto end;
+    // }
 
     time_limit = cJSON_GetObjectItemCaseSensitive(triggerJSON, "timeLimit");
     if (time_limit) {
@@ -251,15 +279,15 @@ OpenAPI_trigger_t *OpenAPI_trigger_parseFromJSON(cJSON *triggerJSON)
 
     return trigger_local_var;
 end:
-    if (trigger_type_local_nonprim) {
-        OpenAPI_trigger_type_free(trigger_type_local_nonprim);
-        trigger_type_local_nonprim = NULL;
-    }
-    if (trigger_category_local_nonprim) {
-        OpenAPI_trigger_category_free(trigger_category_local_nonprim);
-        trigger_category_local_nonprim = NULL;
-    }
-    return NULL;
+    // if (trigger_type_local_nonprim) {
+    //     OpenAPI_trigger_type_free(trigger_type_local_nonprim);
+    //     trigger_type_local_nonprim = NULL;
+    // }
+    // if (trigger_category_local_nonprim) {
+    //     OpenAPI_trigger_category_free(trigger_category_local_nonprim);
+    //     trigger_category_local_nonprim = NULL;
+    // }
+     return NULL;
 }
 
 OpenAPI_trigger_t *OpenAPI_trigger_copy(OpenAPI_trigger_t *dst, OpenAPI_trigger_t *src)

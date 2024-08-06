@@ -1363,11 +1363,9 @@ uint8_t smf_n4_handle_session_report_request(
             ogs_pfcp_parse_volume_measurement(
                     &volume, &use_rep->volume_measurement);
             if (volume.ulvol)
-                // sess->gy.ul_octets += volume.uplink_volume;
-                sess->gy.ul_octets += 1;
+                sess->gy.ul_octets += volume.uplink_volume;
             if (volume.dlvol)
-                // sess->gy.dl_octets += volume.downlink_volume;
-                sess->gy.dl_octets += 1;
+                sess->gy.dl_octets += volume.downlink_volume;
             sess->gy.duration += use_rep->duration_measurement.u32;
             ogs_pfcp_parse_usage_report_trigger(
                     &rep_trig, &use_rep->usage_report_trigger);
@@ -1397,6 +1395,10 @@ uint8_t smf_n4_handle_session_report_request(
     }
 
     /* TS 29.244 sec 8.2.21: At least one bit shall be set to "1". Several bits may be set to "1". */
+
+    sess->pfcp_report_request = pfcp_req;
+
+
     if (report_type.downlink_data_report ||
         report_type.error_indication_report ||
         report_type.usage_report) {

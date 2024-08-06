@@ -26,7 +26,7 @@ typedef struct OpenAPI_used_unit_container_s OpenAPI_used_unit_container_t;
 typedef struct OpenAPI_used_unit_container_s {
     bool is_service_id;
     int service_id;
-    struct OpenAPI_quota_management_indicator_s *quota_management_indicator;
+    char* quota_management_indicator;
     OpenAPI_list_t *triggers;
     char *trigger_timestamp;
     bool is_time;
@@ -49,7 +49,7 @@ typedef struct OpenAPI_used_unit_container_s {
 OpenAPI_used_unit_container_t *OpenAPI_used_unit_container_create(
     bool is_service_id,
     int service_id,
-    OpenAPI_quota_management_indicator_t *quota_management_indicator,
+    char* quota_management_indicator,
     OpenAPI_list_t *triggers,
     char *trigger_timestamp,
     bool is_time,
