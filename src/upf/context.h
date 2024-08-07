@@ -103,6 +103,10 @@ typedef struct upf_sess_s {
     ogs_pool_id_t   id;
     ogs_pool_id_t   *upf_n4_seid_node;  /* A node of UPF-N4-SEID */
 
+    /**********************************NSF***********************************/
+    
+    uint8_t start_of_traffic_flag;
+    /**********************************NSF***********************************/
     ogs_pfcp_sess_t pfcp;
 
     uint64_t        upf_n4_seid;        /* UPF SEID is dervied from NODE */
