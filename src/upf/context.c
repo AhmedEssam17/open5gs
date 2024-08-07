@@ -683,6 +683,8 @@ void upf_sess_urr_acc_add(upf_sess_t *sess, ogs_pfcp_urr_t *urr, size_t size, bo
     upf_sess_urr_acc_t *urr_acc = &sess->urr_acc[urr->id];
     uint64_t vol;
 
+    ogs_info("Inside upf_sess_urr_acc_add");
+
     /* Increment total & ul octets + pkts */
     urr_acc->total_octets += size;
     urr_acc->total_pkts++;
@@ -700,8 +702,10 @@ void upf_sess_urr_acc_add(upf_sess_t *sess, ogs_pfcp_urr_t *urr, size_t size, bo
 
     /* generate report if volume threshold/quota is reached */
     vol = urr_acc->total_octets - urr_acc->last_report.total_octets;
+    ogs_info("Inside upf_sess_urr_acc_add before if");
     if ((urr->rep_triggers.volume_quota && urr->vol_quota.tovol && vol >= urr->vol_quota.total_volume) ||
         (urr->rep_triggers.volume_threshold && urr->vol_threshold.tovol && vol >= urr->vol_threshold.total_volume)) {
+        ogs_info("Inside upf_sess_urr_acc_add inside if");
         ogs_pfcp_user_plane_report_t report;
         memset(&report, 0, sizeof(report));
         upf_sess_urr_acc_fill_usage_report(sess, urr, &report, 0);
