@@ -1373,7 +1373,9 @@ ogs_pfcp_urr_t *ogs_pfcp_handle_create_urr(ogs_pfcp_sess_t *sess,
         (urr->meas_method & OGS_PFCP_MEASUREMENT_METHOD_VOLUME)) {
         decoded = ogs_pfcp_parse_volume(
                 &urr->vol_threshold, &message->volume_threshold);
+        ogs_info("Handle create urr >> volume");
         if (message->volume_threshold.len != decoded) {
+            ogs_info("Invalid Volume Quota");
             ogs_error("Invalid Volume Threshold");
             *cause_value = OGS_PFCP_CAUSE_MANDATORY_IE_INCORRECT;
             *offending_ie_value = OGS_PFCP_VOLUME_THRESHOLD_TYPE;

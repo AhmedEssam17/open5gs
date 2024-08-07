@@ -31,15 +31,24 @@ static void upf_n4_handle_create_urr(upf_sess_t *sess, ogs_pfcp_tlv_create_urr_t
     *cause_value = OGS_PFCP_CAUSE_REQUEST_ACCEPTED;
 
     for (i = 0; i < OGS_MAX_NUM_OF_URR; i++) {
+        
         urr = ogs_pfcp_handle_create_urr(&sess->pfcp, &create_urr_arr[i],
                     cause_value, offending_ie_value);
         if (!urr)
             return;
+        
+        ogs_info("URR %d >> %d", urr->id, urr->meas_method);
 
         /* TODO: enable counters somewhere else if ISTM not set, upon first pkt received */
         if (urr->meas_info.istm) {
+            ogs_info("::::::urr->meas_info.istm:::::::");
             upf_sess_urr_acc_timers_setup(sess, urr);
         }
+
+        // if (urr->meas_info.mnop) {
+        //     ogs_info("::::::urr->meas_info.mnop:::::::");
+        //     // upf_sess_urr_acc_timers_setup(sess, urr);
+        // }
     }
 }
 

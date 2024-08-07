@@ -256,16 +256,19 @@ cleanup:
 
 static void _gtpv1_tun_recv_cb(short when, ogs_socket_t fd, void *data)
 {
+    ogs_info("_gtpv1_tun_recv_cb(short when, ogs_socket_t fd, void *data)");
     _gtpv1_tun_recv_common_cb(when, fd, false, data);
 }
 
 static void _gtpv1_tun_recv_eth_cb(short when, ogs_socket_t fd, void *data)
 {
+    ogs_info("_gtpv1_tun_recv_eth_cb(short when, ogs_socket_t fd, void *data)");
     _gtpv1_tun_recv_common_cb(when, fd, true, data);
 }
 
 static void _gtpv1_u_recv_cb(short when, ogs_socket_t fd, void *data)
 {
+    ogs_info("_gtpv1_u_recv_cb(short when, ogs_socket_t fd, void *data)");
     int len;
     ssize_t size;
     char buf1[OGS_ADDRSTRLEN];

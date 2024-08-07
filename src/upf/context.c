@@ -852,16 +852,44 @@ static void upf_sess_urr_acc_time_threshold_setup(upf_sess_t *sess, ogs_pfcp_urr
             ogs_time_from_sec(urr->time_threshold));
 }
 
+static void upf_sess_urr_acc_volume_threshold_setup(upf_sess_t *sess, ogs_pfcp_urr_t *urr)
+{
+    upf_sess_urr_acc_t *urr_acc = &sess->urr_acc[urr->id];
+
+    ogs_debug("Installing URR volume Threshold ");
+    ogs_info("^^^^^upf_sess_urr_acc_volume_threshold_setup ^^^^^^^^^^");
+    urr_acc->reporting_enabled = true;
+    if (urr_acc->ul_octets == 0)
+        urr_acc->ul_octets = urr->vol_threshold.uplink_volume;
+
+    if (urr_acc->dl_octets == 0)
+        urr_acc->dl_octets = urr->vol_threshold.downlink_volume;
+}
+
 void upf_sess_urr_acc_timers_setup(upf_sess_t *sess, ogs_pfcp_urr_t *urr)
 {
     upf_sess_urr_acc_t *urr_acc = &sess->urr_acc[urr->id];
     urr_acc->time_start = ogs_time_ntp32_now();
     if (urr->rep_triggers.quota_validity_time && urr->quota_validity_time > 0)
+    {
+        ogs_info("urr%d -->  urr->rep_triggers.quota_validity_time",urr->id);
         upf_sess_urr_acc_validity_time_setup(sess, urr);
+    }
     if (urr->rep_triggers.time_quota && urr->time_quota > 0)
+    {
+        ogs_info("urr %d -->  urr->rep_triggers.time_quota",urr->id);
         upf_sess_urr_acc_time_quota_setup(sess, urr);
+    }
     if (urr->rep_triggers.time_threshold && urr->time_threshold > 0)
+    {  
+        ogs_info("urr %d --> rep_triggers.time_threshold",urr->id);
         upf_sess_urr_acc_time_threshold_setup(sess, urr);
+    }
+    if (urr->rep_triggers.volume_threshold && urr->vol_threshold.uplink_volume > 0 && urr->vol_threshold.downlink_volume > 0  )
+    {  
+        ogs_info("urr %d --> rep_triggers.volume_threshold",urr->id);
+        upf_sess_urr_acc_volume_threshold_setup(sess, urr);
+    }
 }
 
 static void upf_sess_urr_acc_remove_all(upf_sess_t *sess)

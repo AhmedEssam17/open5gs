@@ -2023,10 +2023,32 @@ smf_bearer_t *smf_qos_flow_add(smf_sess_t *sess)
         ctf_urr = ogs_pfcp_urr_add(&sess->pfcp);
         ogs_assert(ctf_urr);
         qos_flow->urr = ctf_urr;
-        ctf_urr->meas_method = OGS_PFCP_MEASUREMENT_METHOD_DURATION;
-        ctf_urr->rep_triggers.time_threshold = 1;
-        ctf_urr->time_threshold = ogs_pfcp_self()->usageLoggerState.reporting_period_sec;
+        // ctf_urr->meas_method = OGS_PFCP_MEASUREMENT_METHOD_DURATION;
+        ctf_urr->meas_method = OGS_PFCP_MEASUREMENT_METHOD_VOLUME;
+        // ctf_urr->rep_triggers.time_threshold = 1;
+       
+        // ctf_urr->time_threshold = ogs_pfcp_self()->usageLoggerState.reporting_period_sec;
         ctf_urr->meas_info.istm = 1;
+        // ctf_urr->meas_info.mnop = 1;
+        ctf_urr->rep_triggers.volume_threshold = 1;
+        ctf_urr->vol_threshold.dlvol = 1;
+        ctf_urr->vol_threshold.ulvol = 1;
+        ctf_urr->vol_threshold.downlink_volume = 1000;
+        ctf_urr->vol_threshold.uplink_volume = 1000;
+        
+    
+        // ctf_urr->rep_triggers.periodic_reporting = 1;
+        // ctf_urr->meas_period = ogs_pfcp_self()->usageLoggerState.reporting_period_sec;
+     
+        
+        // ctf_urr->meas_info.mbqe = 1;
+
+
+
+
+
+
+
 
         ogs_pfcp_pdr_associate_urr(ul_pdr, urr);
         ogs_pfcp_pdr_associate_urr(dl_pdr, ctf_urr);
