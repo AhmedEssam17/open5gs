@@ -681,7 +681,7 @@ uint8_t upf_sess_set_ue_ipv6_framed_routes(upf_sess_t *sess,
 void upf_sess_urr_acc_add(upf_sess_t *sess, ogs_pfcp_urr_t *urr, size_t size, bool is_uplink)
 {
     upf_sess_urr_acc_t *urr_acc = &sess->urr_acc[urr->id];
-    uint64_t vol;
+    uint64_t vol, ulvol, dlvol;
 
     ogs_info("Inside upf_sess_urr_acc_add");
 
@@ -700,11 +700,21 @@ void upf_sess_urr_acc_add(upf_sess_t *sess, ogs_pfcp_urr_t *urr, size_t size, bo
     if (urr_acc->time_of_first_packet == 0)
         urr_acc->time_of_first_packet = urr_acc->time_of_last_packet;
 
+
+    dlvol = urr_acc->dl_octets;
+    ulvol = urr_acc->ul_octets;
+
+    ogs_info("dlvol = %ld", urr_acc->dl_octets);
+    ogs_info("ulvol = %ld", urr_acc->ul_octets);
+
     /* generate report if volume threshold/quota is reached */
     vol = urr_acc->total_octets - urr_acc->last_report.total_octets;
     ogs_info("Inside upf_sess_urr_acc_add before if");
+    // ogs_info("vol = %ld ||||| totalVol = %ld", vol , urr->vol_threshold.total_volume);
     if ((urr->rep_triggers.volume_quota && urr->vol_quota.tovol && vol >= urr->vol_quota.total_volume) ||
-        (urr->rep_triggers.volume_threshold && urr->vol_threshold.tovol && vol >= urr->vol_threshold.total_volume)) {
+        (urr->rep_triggers.volume_threshold && urr->vol_threshold.tovol && vol >= urr->vol_threshold.total_volume) ||
+        (urr->rep_triggers.volume_threshold && urr->vol_threshold.dlvol && dlvol >= urr->vol_threshold.downlink_volume) ||
+        (urr->rep_triggers.volume_threshold && urr->vol_threshold.ulvol && ulvol >= urr->vol_threshold.uplink_volume)) {
         ogs_info("Inside upf_sess_urr_acc_add inside if");
         ogs_pfcp_user_plane_report_t report;
         memset(&report, 0, sizeof(report));
@@ -776,8 +786,10 @@ void upf_sess_urr_acc_fill_usage_report(upf_sess_t *sess, const ogs_pfcp_urr_t *
     if (urr->rep_triggers.volume_quota && urr->vol_quota.tovol &&
             report->usage_report[idx].vol_measurement.total_volume >= urr->vol_quota.total_volume)
         report->usage_report[idx].rep_trigger.volume_quota = 1;
-    if (urr->rep_triggers.volume_threshold && urr->vol_threshold.tovol &&
-            report->usage_report[idx].vol_measurement.total_volume >= urr->vol_threshold.total_volume)
+    if ((urr->rep_triggers.volume_threshold && urr->vol_threshold.tovol &&
+            report->usage_report[idx].vol_measurement.total_volume >= urr->vol_threshold.total_volume) ||
+            (urr->rep_triggers.volume_threshold && urr->vol_threshold.dlvol) ||
+            (urr->rep_triggers.volume_threshold && urr->vol_threshold.ulvol))
         report->usage_report[idx].rep_trigger.volume_threshold = 1;
 }
 
@@ -856,19 +868,19 @@ static void upf_sess_urr_acc_time_threshold_setup(upf_sess_t *sess, ogs_pfcp_urr
             ogs_time_from_sec(urr->time_threshold));
 }
 
-static void upf_sess_urr_acc_volume_threshold_setup(upf_sess_t *sess, ogs_pfcp_urr_t *urr)
-{
-    upf_sess_urr_acc_t *urr_acc = &sess->urr_acc[urr->id];
+// static void upf_sess_urr_acc_volume_threshold_setup(upf_sess_t *sess, ogs_pfcp_urr_t *urr)
+// {
+//     upf_sess_urr_acc_t *urr_acc = &sess->urr_acc[urr->id];
 
-    ogs_debug("Installing URR volume Threshold ");
-    ogs_info("^^^^^upf_sess_urr_acc_volume_threshold_setup ^^^^^^^^^^");
-    urr_acc->reporting_enabled = true;
-    if (urr_acc->ul_octets == 0)
-        urr_acc->ul_octets = urr->vol_threshold.uplink_volume;
+//     ogs_debug("Installing URR volume Threshold ");
+//     ogs_info("^^^^^upf_sess_urr_acc_volume_threshold_setup ^^^^^^^^^^");
+//     urr_acc->reporting_enabled = true;
+//     if (urr_acc->ul_octets == 0)
+//         urr_acc->ul_octets = urr->vol_threshold.uplink_volume;
 
-    if (urr_acc->dl_octets == 0)
-        urr_acc->dl_octets = urr->vol_threshold.downlink_volume;
-}
+//     if (urr_acc->dl_octets == 0)
+//         urr_acc->dl_octets = urr->vol_threshold.downlink_volume;
+// }
 
 void upf_sess_urr_acc_timers_setup(upf_sess_t *sess, ogs_pfcp_urr_t *urr)
 {
@@ -889,11 +901,11 @@ void upf_sess_urr_acc_timers_setup(upf_sess_t *sess, ogs_pfcp_urr_t *urr)
         ogs_info("urr %d --> rep_triggers.time_threshold",urr->id);
         upf_sess_urr_acc_time_threshold_setup(sess, urr);
     }
-    if (urr->rep_triggers.volume_threshold && urr->vol_threshold.uplink_volume > 0 && urr->vol_threshold.downlink_volume > 0  )
-    {  
-        ogs_info("urr %d --> rep_triggers.volume_threshold",urr->id);
-        upf_sess_urr_acc_volume_threshold_setup(sess, urr);
-    }
+    // if (urr->rep_triggers.volume_threshold && urr->vol_threshold.uplink_volume > 0 && urr->vol_threshold.downlink_volume > 0  )
+    // {  
+    //     ogs_info("urr %d --> rep_triggers.volume_threshold",urr->id);
+    //     upf_sess_urr_acc_volume_threshold_setup(sess, urr);
+    // }
 }
 
 static void upf_sess_urr_acc_remove_all(upf_sess_t *sess)

@@ -1931,6 +1931,7 @@ smf_bearer_t *smf_qos_flow_add(smf_sess_t *sess)
     ogs_pfcp_urr_t *urr = NULL;
     ogs_pfcp_qer_t *qer = NULL;
     ogs_pfcp_urr_t *ctf_urr = NULL;
+    ogs_pfcp_urr_t *start_urr = NULL;
 
     ogs_assert(sess);
 
@@ -2033,26 +2034,29 @@ smf_bearer_t *smf_qos_flow_add(smf_sess_t *sess)
         ctf_urr->rep_triggers.volume_threshold = 1;
         ctf_urr->vol_threshold.dlvol = 1;
         ctf_urr->vol_threshold.ulvol = 1;
+        ctf_urr->vol_threshold.tovol = 1;
         ctf_urr->vol_threshold.downlink_volume = 1000;
         ctf_urr->vol_threshold.uplink_volume = 1000;
-        
+        ctf_urr->vol_threshold.total_volume = 2000;
     
         // ctf_urr->rep_triggers.periodic_reporting = 1;
         // ctf_urr->meas_period = ogs_pfcp_self()->usageLoggerState.reporting_period_sec;
-     
-        
         // ctf_urr->meas_info.mbqe = 1;
 
-
-
-
-
-
-
+        /* URR 3*/
+        start_urr = ogs_pfcp_urr_add(&sess->pfcp);
+        ogs_assert(start_urr);
+        qos_flow->urr = start_urr;
+        start_urr->meas_method = OGS_PFCP_MEASUREMENT_METHOD_VOLUME;
+        start_urr->rep_triggers.start_of_traffic = 1;
 
         ogs_pfcp_pdr_associate_urr(ul_pdr, urr);
+
         ogs_pfcp_pdr_associate_urr(dl_pdr, ctf_urr);
         ogs_pfcp_pdr_associate_urr(ul_pdr, ctf_urr);
+
+        ogs_pfcp_pdr_associate_urr(dl_pdr, start_urr);
+        ogs_pfcp_pdr_associate_urr(ul_pdr, start_urr);
     }
 
     /* QER */

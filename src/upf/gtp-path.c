@@ -113,19 +113,16 @@ static void _gtpv1_tun_recv_common_cb(
 
     recvbuf = ogs_tun_read(fd, packet_pool);
     if (!recvbuf) {
-        ogs_info("ogs_tun_read() failed");
         ogs_warn("ogs_tun_read() failed");
         return;
     }
 
     if (has_eth) {
-        ogs_info("if (has_eth) == true");
         ogs_pkbuf_t *replybuf = NULL;
         uint16_t eth_type = _get_eth_type(recvbuf->data, recvbuf->len);
         uint8_t size;
 
         if (eth_type == ETHERTYPE_ARP) {
-            ogs_info("if (eth_type == ETHERTYPE_ARP) == true");
             if (is_arp_req(recvbuf->data, recvbuf->len) &&
                     upf_sess_find_by_ipv4(
                         arp_parse_target_addr(recvbuf->data, recvbuf->len))) {
@@ -142,7 +139,6 @@ static void _gtpv1_tun_recv_common_cb(
             }
         } else if (eth_type == ETHERTYPE_IPV6 &&
                     is_nd_req(recvbuf->data, recvbuf->len)) {
-                ogs_info("if (eth_type == ETHERTYPE_IPV6 && is_nd_req(recvbuf->data, recvbuf->len)) == true");
             replybuf = ogs_pkbuf_alloc(packet_pool, OGS_MAX_PKT_LEN);
             ogs_assert(replybuf);
             ogs_pkbuf_reserve(replybuf, OGS_TUN_MAX_HEADROOM);
@@ -154,14 +150,12 @@ static void _gtpv1_tun_recv_common_cb(
         }
         if (replybuf) {
             if (ogs_tun_write(fd, replybuf) != OGS_OK){
-                ogs_info("ogs_tun_write() for reply failed");
                 ogs_warn("ogs_tun_write() for reply failed");
             }
             ogs_pkbuf_free(replybuf);
             goto cleanup;
         }
         if (eth_type != ETHERTYPE_IP && eth_type != ETHERTYPE_IPV6) {
-            ogs_info("[DROP] Invalid eth_type [%x]]", eth_type);
             ogs_error("[DROP] Invalid eth_type [%x]]", eth_type);
             ogs_log_hexdump(OGS_LOG_ERROR, recvbuf->data, recvbuf->len);
             goto cleanup;
@@ -173,7 +167,6 @@ static void _gtpv1_tun_recv_common_cb(
     if (!sess)
         goto cleanup;
 
-    ogs_info("Before ogs_list_for_each(&sess->pfcp.pdr_list, pdr)");
     ogs_list_for_each(&sess->pfcp.pdr_list, pdr) {
         far = pdr->far;
         ogs_assert(far);
@@ -206,7 +199,6 @@ static void _gtpv1_tun_recv_common_cb(
         break;
     }
 
-    ogs_info("After ogs_list_for_each(&sess->pfcp.pdr_list, pdr)");
     if (!pdr)
         pdr = fallback_pdr;
 
@@ -217,12 +209,9 @@ static void _gtpv1_tun_recv_common_cb(
         goto cleanup;
     }
 
-    ogs_info("Before upf_sess_urr_acc_add(sess, pdr->urr[i], recvbuf->len, false);");
     /* Increment total & dl octets + pkts */
     for (i = 0; i < pdr->num_of_urr; i++)
         upf_sess_urr_acc_add(sess, pdr->urr[i], recvbuf->len, false);
-
-    ogs_info("After upf_sess_urr_acc_add(sess, pdr->urr[i], recvbuf->len, false);");
 
     ogs_assert(true == ogs_pfcp_up_handle_pdr(
                 pdr, OGS_GTPU_MSGTYPE_GPDU, NULL, recvbuf, &report));
