@@ -2176,26 +2176,43 @@ static int parse_json(ogs_sbi_message_t *message,
             END
             break;
         CASE(OGS_SBI_SERVICE_NAME_NCHF_CONVERGEDCHARGING)
-            SWITCH(message->h.resource.component[0])
-            CASE((char *)"chargingdata")
-                if (!message->h.resource.component[1]) {
-                    ogs_info("message->res_status = %d", message->res_status);
-                    if (message->res_status == 0) {
-                        message->ChargingDataRequest =
-                            OpenAPI_charging_data_request_parseFromJSON(item);
-                        if (!message->ChargingDataRequest) {
-                            rv = OGS_ERROR;
-                            ogs_error("JSON parse error");
-                        }
-                    } 
+            if(message->res_status == OGS_SBI_HTTP_STATUS_OK){
+                ogs_info(">>>>>>>>>>>>>>>>>>> ChargingDataResponse <<<<<<<<<<<<<<<<<<");
+                message->ChargingDataResponse = OpenAPI_charging_data_response_parseFromJSON(item);
+                if (!message->ChargingDataResponse) {
+                    rv = OGS_ERROR;
+                    ogs_error("JSON parse error");
                 }
+                OpenAPI_multiple_unit_information_t *test_multiple = (OpenAPI_multiple_unit_information_t *)message->ChargingDataResponse->multiple_unit_information->last->data;
+                ogs_info(">>>>>>>>>>>>>>>>>>> ChargingDataResponse total vol-> %d <<<<<<<<<<<<<<<<<<", test_multiple->granted_unit->total_volume);
+                ogs_info(">>>>>>>>>>>>>>>>>>> ChargingDataResponse uplink vol-> %d <<<<<<<<<<<<<<<<<<", test_multiple->granted_unit->uplink_volume);
+                ogs_info(">>>>>>>>>>>>>>>>>>> ChargingDataResponse downlink vol-> %d <<<<<<<<<<<<<<<<<<", test_multiple->granted_unit->downlink_volume);
+                // ogs_info(">>>>>>>>>>>>>>>>>>> ChargingDataResponse count-> %ld <<<<<<<<<<<<<<<<<<", message->ChargingDataResponse->multiple_unit_information->count);
+            }
+            else {
+                SWITCH(message->h.resource.component[0])
+                CASE((char *)"chargingdata")
+                    if (!message->h.resource.component[1]) {
+                        ogs_info("message->res_status = %d", message->res_status);
+                        if (message->res_status == 0) {
+                            message->ChargingDataRequest =
+                                OpenAPI_charging_data_request_parseFromJSON(item);
+                            if (!message->ChargingDataRequest) {
+                                rv = OGS_ERROR;
+                                ogs_error("JSON parse error");
+                            }
+                        } 
+                    }
+                break;
+                DEFAULT
+                    rv = OGS_ERROR;
+                    ogs_error("Unknown resource name [%s]",
+                            message->h.resource.component[0]);
+                END
+                break;
+            }
             break;
-            DEFAULT
-                rv = OGS_ERROR;
-                ogs_error("Unknown resource name [%s]",
-                        message->h.resource.component[0]);
-            END
-            break;
+            
 
         CASE(OGS_SBI_SERVICE_NAME_NPCF_SMPOLICYCONTROL)
             SWITCH(message->h.resource.component[0])

@@ -551,8 +551,8 @@ typedef struct ogs_sbi_message_s {
     OpenAPI_sec_negotiate_rsp_data_t *SecNegotiateRspData;
     OpenAPI_ue_context_transfer_req_data_t *UeContextTransferReqData;
     OpenAPI_ue_context_transfer_rsp_data_t *UeContextTransferRspData;
-    // OpenAPI_charging_data_request_t *ChargingDataRequest;
     OpenAPI_charging_data_request_t *ChargingDataRequest;
+    OpenAPI_charging_data_response_t *ChargingDataResponse;
 
     ogs_sbi_links_t *links;
 

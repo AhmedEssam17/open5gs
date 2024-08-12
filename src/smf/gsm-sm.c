@@ -632,6 +632,7 @@ void smf_gsm_state_wait_5gc_sm_policy_association(ogs_fsm_t *s, smf_event_t *e)
             break;
         
         CASE(OGS_SBI_SERVICE_NAME_NCHF_CONVERGEDCHARGING)
+            // ogs_info(">>>>>>>> sbi_message <<<<<<<<")
             ogs_info("OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING in smf_gsm_state_wait_5gc_sm_policy_association");
             if(smf_nchf_handle_get(sess, state, sbi_message)){
                 ogs_info("$$$$$$$$$$$$$$ Returned true from smf_nchf_handle_get $$$$$$$$$$$$$$");
