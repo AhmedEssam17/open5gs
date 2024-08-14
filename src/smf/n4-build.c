@@ -185,6 +185,7 @@ ogs_pkbuf_t *smf_n4_build_pdr_to_modify_list(
     ogs_pfcp_pdr_t *pdr = NULL;
     ogs_pfcp_urr_t *urr = NULL;
     int i;
+    uint8_t urr_update = 0;
 
     ogs_pfcp_message_t *pfcp_message = NULL;
     ogs_pfcp_session_modification_request_t *req = NULL;
@@ -286,6 +287,10 @@ ogs_pkbuf_t *smf_n4_build_pdr_to_modify_list(
                         &req->update_far[num_of_update_far],
                         num_of_update_far, far);
                 num_of_update_far++;
+            } else if (modify_flags & OGS_PFCP_MODIFY_URR_VOLUME_QUOTA) {
+                modify_flags |= (OGS_PFCP_MODIFY_URR_MEAS_METHOD | OGS_PFCP_MODIFY_URR_REPORT_TRIGGER | OGS_PFCP_MODIFY_URR_VOLUME_THRESH);
+                urr_update = 1;
+                continue;
             } else if (modify_flags == 0) {
                 ogs_fatal("Invalid modify_flags = %lld",
                         (long long)modify_flags);
@@ -298,6 +303,10 @@ ogs_pkbuf_t *smf_n4_build_pdr_to_modify_list(
     /* Update URR */
     i = 0;
     ogs_list_for_each(&sess->pfcp.urr_list, urr) {
+        ogs_info("/* /* /* /* /* /* Update URR */ * /* /* /* /* /* ");
+        if(urr_update && urr->id != 2) {
+            continue;
+        }
         ogs_pfcp_build_update_urr(&req->update_urr[i], i, urr, modify_flags);
         i++;
     }
@@ -361,6 +370,8 @@ ogs_pkbuf_t *smf_n4_build_qos_flow_to_modify_list(
              OGS_PFCP_MODIFY_EPC_TFT_UPDATE)) {
         ogs_pfcp_pdrbuf_init();
     }
+
+    ogs_info("_____________________________ smf_n4_build_qos_flow_to_modify_list _____________________________");
 
     ogs_list_for_each_entry(
             &sess->qos_flow_to_modify_list, qos_flow, to_modify_node) {
@@ -516,6 +527,8 @@ ogs_pkbuf_t *smf_n4_build_qos_flow_to_modify_list(
                             qos_flow->dl_far->
                                 smreq_flags.send_end_marker_packets = 1;
                         }
+
+                        ogs_info("_____________________________ Update FAR - Only DL _____________________________");
 
                         ogs_pfcp_build_update_far_activate(
                                 &req->update_far[num_of_update_far],

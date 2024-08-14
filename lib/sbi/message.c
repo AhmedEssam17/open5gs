@@ -2177,17 +2177,11 @@ static int parse_json(ogs_sbi_message_t *message,
             break;
         CASE(OGS_SBI_SERVICE_NAME_NCHF_CONVERGEDCHARGING)
             if(message->res_status == OGS_SBI_HTTP_STATUS_OK){
-                ogs_info(">>>>>>>>>>>>>>>>>>> ChargingDataResponse <<<<<<<<<<<<<<<<<<");
                 message->ChargingDataResponse = OpenAPI_charging_data_response_parseFromJSON(item);
                 if (!message->ChargingDataResponse) {
                     rv = OGS_ERROR;
                     ogs_error("JSON parse error");
                 }
-                OpenAPI_multiple_unit_information_t *test_multiple = (OpenAPI_multiple_unit_information_t *)message->ChargingDataResponse->multiple_unit_information->last->data;
-                ogs_info(">>>>>>>>>>>>>>>>>>> ChargingDataResponse total vol-> %d <<<<<<<<<<<<<<<<<<", test_multiple->granted_unit->total_volume);
-                ogs_info(">>>>>>>>>>>>>>>>>>> ChargingDataResponse uplink vol-> %d <<<<<<<<<<<<<<<<<<", test_multiple->granted_unit->uplink_volume);
-                ogs_info(">>>>>>>>>>>>>>>>>>> ChargingDataResponse downlink vol-> %d <<<<<<<<<<<<<<<<<<", test_multiple->granted_unit->downlink_volume);
-                // ogs_info(">>>>>>>>>>>>>>>>>>> ChargingDataResponse count-> %ld <<<<<<<<<<<<<<<<<<", message->ChargingDataResponse->multiple_unit_information->count);
             }
             else {
                 SWITCH(message->h.resource.component[0])

@@ -198,6 +198,8 @@ int gsm_handle_pdu_session_modification_request(
 {
     int i, j;
 
+    ogs_info("_____________________________ gsm_handle_pdu_session_modification_request _____________________________");
+
     uint64_t pfcp_flags = 0;
 
     smf_bearer_t *qos_flow = NULL;

@@ -5,7 +5,7 @@
 #include "final_unit_indication.h"
 
 OpenAPI_final_unit_indication_t *OpenAPI_final_unit_indication_create(
-    OpenAPI_final_unit_action_t *final_unit_action,
+    char *final_unit_action,
     char *restriction_filter_rule,
     OpenAPI_list_t *restriction_filter_rule_list,
     char *filter_id,
@@ -34,7 +34,7 @@ void OpenAPI_final_unit_indication_free(OpenAPI_final_unit_indication_t *final_u
         return;
     }
     if (final_unit_indication->final_unit_action) {
-        OpenAPI_final_unit_action_free(final_unit_indication->final_unit_action);
+        ogs_free(final_unit_indication->final_unit_action);
         final_unit_indication->final_unit_action = NULL;
     }
     if (final_unit_indication->restriction_filter_rule) {
@@ -76,20 +76,27 @@ cJSON *OpenAPI_final_unit_indication_convertToJSON(OpenAPI_final_unit_indication
         return NULL;
     }
 
-    item = cJSON_CreateObject();
-    if (!final_unit_indication->final_unit_action) {
-        ogs_error("OpenAPI_final_unit_indication_convertToJSON() failed [final_unit_action]");
-        return NULL;
-    }
-    cJSON *final_unit_action_local_JSON = OpenAPI_final_unit_action_convertToJSON(final_unit_indication->final_unit_action);
-    if (final_unit_action_local_JSON == NULL) {
-        ogs_error("OpenAPI_final_unit_indication_convertToJSON() failed [final_unit_action]");
+    // item = cJSON_CreateObject();
+    // if (!final_unit_indication->final_unit_action) {
+    //     ogs_error("OpenAPI_final_unit_indication_convertToJSON() failed [final_unit_action]");
+    //     return NULL;
+    // }
+    // cJSON *final_unit_action_local_JSON = OpenAPI_final_unit_action_convertToJSON(final_unit_indication->final_unit_action);
+    // if (final_unit_action_local_JSON == NULL) {
+    //     ogs_error("OpenAPI_final_unit_indication_convertToJSON() failed [final_unit_action]");
+    //     goto end;
+    // }
+    // cJSON_AddItemToObject(item, "finalUnitAction", final_unit_action_local_JSON);
+    // if (item->child == NULL) {
+    //     ogs_error("OpenAPI_final_unit_indication_convertToJSON() failed [final_unit_action]");
+    //     goto end;
+    // }
+
+    if (final_unit_indication->final_unit_action) {
+    if (cJSON_AddStringToObject(item, "finalUnitAction", final_unit_indication->final_unit_action) == NULL) {
+        ogs_error("OpenAPI_final_unit_indication_convertToJSON() failed [finalUnitAction]");
         goto end;
     }
-    cJSON_AddItemToObject(item, "finalUnitAction", final_unit_action_local_JSON);
-    if (item->child == NULL) {
-        ogs_error("OpenAPI_final_unit_indication_convertToJSON() failed [final_unit_action]");
-        goto end;
     }
 
     if (final_unit_indication->restriction_filter_rule) {
@@ -156,7 +163,7 @@ OpenAPI_final_unit_indication_t *OpenAPI_final_unit_indication_parseFromJSON(cJS
     OpenAPI_final_unit_indication_t *final_unit_indication_local_var = NULL;
     OpenAPI_lnode_t *node = NULL;
     cJSON *final_unit_action = NULL;
-    OpenAPI_final_unit_action_t *final_unit_action_local_nonprim = NULL;
+    cJSON *final_unit_action_local_nonprim = NULL;
     cJSON *restriction_filter_rule = NULL;
     cJSON *restriction_filter_rule_list = NULL;
     OpenAPI_list_t *restriction_filter_rule_listList = NULL;
@@ -166,14 +173,22 @@ OpenAPI_final_unit_indication_t *OpenAPI_final_unit_indication_parseFromJSON(cJS
     cJSON *redirect_server = NULL;
     OpenAPI_redirect_server_t *redirect_server_local_nonprim = NULL;
     final_unit_action = cJSON_GetObjectItemCaseSensitive(final_unit_indicationJSON, "finalUnitAction");
-    if (!final_unit_action) {
-        ogs_error("OpenAPI_final_unit_indication_parseFromJSON() failed [final_unit_action]");
+    // if (!final_unit_action) {
+    //     ogs_error("OpenAPI_final_unit_indication_parseFromJSON() failed [final_unit_action]");
+    //     goto end;
+    // }
+    // final_unit_action_local_nonprim = OpenAPI_final_unit_action_parseFromJSON(final_unit_action);
+    // if (!final_unit_action_local_nonprim) {
+    //     ogs_error("OpenAPI_final_unit_action_parseFromJSON failed [final_unit_action]");
+    //     goto end;
+    // }
+
+    final_unit_action = cJSON_GetObjectItemCaseSensitive(final_unit_indicationJSON, "finalUnitAction");
+    if (final_unit_action) {
+    if (!cJSON_IsString(final_unit_action) && !cJSON_IsNull(final_unit_action)) {
+        ogs_error("OpenAPI_exposure_data_change_notification_parseFromJSON() failed [ue_id]");
         goto end;
     }
-    final_unit_action_local_nonprim = OpenAPI_final_unit_action_parseFromJSON(final_unit_action);
-    if (!final_unit_action_local_nonprim) {
-        ogs_error("OpenAPI_final_unit_action_parseFromJSON failed [final_unit_action]");
-        goto end;
     }
 
     restriction_filter_rule = cJSON_GetObjectItemCaseSensitive(final_unit_indicationJSON, "restrictionFilterRule");
@@ -244,7 +259,7 @@ OpenAPI_final_unit_indication_t *OpenAPI_final_unit_indication_parseFromJSON(cJS
     }
 
     final_unit_indication_local_var = OpenAPI_final_unit_indication_create (
-        final_unit_action_local_nonprim,
+        final_unit_action && !cJSON_IsNull(final_unit_action) ? ogs_strdup(final_unit_action->valuestring) : NULL,
         restriction_filter_rule && !cJSON_IsNull(restriction_filter_rule) ? ogs_strdup(restriction_filter_rule->valuestring) : NULL,
         restriction_filter_rule_list ? restriction_filter_rule_listList : NULL,
         filter_id && !cJSON_IsNull(filter_id) ? ogs_strdup(filter_id->valuestring) : NULL,
@@ -254,10 +269,10 @@ OpenAPI_final_unit_indication_t *OpenAPI_final_unit_indication_parseFromJSON(cJS
 
     return final_unit_indication_local_var;
 end:
-    if (final_unit_action_local_nonprim) {
-        OpenAPI_final_unit_action_free(final_unit_action_local_nonprim);
-        final_unit_action_local_nonprim = NULL;
-    }
+    // if (final_unit_action_local_nonprim) {
+    //     OpenAPI_final_unit_action_free(final_unit_action_local_nonprim);
+    //     final_unit_action_local_nonprim = NULL;
+    // }
     if (restriction_filter_rule_listList) {
         OpenAPI_list_for_each(restriction_filter_rule_listList, node) {
             ogs_free(node->data);

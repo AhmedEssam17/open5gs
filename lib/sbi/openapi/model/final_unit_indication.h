@@ -21,7 +21,7 @@ extern "C" {
 
 typedef struct OpenAPI_final_unit_indication_s OpenAPI_final_unit_indication_t;
 typedef struct OpenAPI_final_unit_indication_s {
-    struct OpenAPI_final_unit_action_s *final_unit_action;
+    char *final_unit_action;
     char *restriction_filter_rule;
     OpenAPI_list_t *restriction_filter_rule_list;
     char *filter_id;
@@ -30,7 +30,7 @@ typedef struct OpenAPI_final_unit_indication_s {
 } OpenAPI_final_unit_indication_t;
 
 OpenAPI_final_unit_indication_t *OpenAPI_final_unit_indication_create(
-    OpenAPI_final_unit_action_t *final_unit_action,
+    char *final_unit_action,
     char *restriction_filter_rule,
     OpenAPI_list_t *restriction_filter_rule_list,
     char *filter_id,

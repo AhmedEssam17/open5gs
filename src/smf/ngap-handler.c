@@ -146,6 +146,7 @@ int ngap_handle_pdu_session_resource_setup_response_transfer(
     }
 
     if (far_update) {
+        ogs_info("___________ ngap_handle_pdu_session_resource_setup_response_transfer : 149 ________________");
         ogs_assert(OGS_OK ==
             smf_5gc_pfcp_send_all_pdr_modification_request(
                 sess, stream, OGS_PFCP_MODIFY_DL_ONLY|OGS_PFCP_MODIFY_ACTIVATE,
@@ -255,7 +256,7 @@ int ngap_handle_pdu_session_resource_setup_unsuccessful_transfer(
      *   has failed and set the upCnxState attribute to DEACTIVATED"
      *   otherwise.
      */
-
+    ogs_info("___________ ngap_handle_pdu_session_resource_setup_response_transfer : 259 ________________");
     ogs_assert(OGS_OK ==
         smf_5gc_pfcp_send_all_pdr_modification_request(
             sess, stream,
@@ -482,6 +483,7 @@ int ngap_handle_path_switch_request_transfer(
     }
 
     if (far_update) {
+        ogs_info("___________ ngap_handle_path_switch_request_transfer : 486 ________________");
         ogs_assert(OGS_OK ==
             smf_5gc_pfcp_send_all_pdr_modification_request(
                 sess, stream,

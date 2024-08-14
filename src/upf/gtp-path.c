@@ -380,6 +380,9 @@ static void _gtpv1_u_recv_cb(short when, ogs_socket_t fd, void *data)
             ogs_log_hexdump(OGS_LOG_ERROR, pkbuf->data, pkbuf->len);
         }
     } else if (header_desc.type == OGS_GTPU_MSGTYPE_GPDU) {
+
+        ogs_info("......... upf handling modify flags ..........");
+
         uint16_t eth_type = 0;
         struct ip *ip_h = NULL;
         uint32_t *src_addr = NULL;
@@ -387,6 +390,7 @@ static void _gtpv1_u_recv_cb(short when, ogs_socket_t fd, void *data)
         ogs_pfcp_sess_t *pfcp_sess = NULL;
         ogs_pfcp_pdr_t *pdr = NULL;
         ogs_pfcp_far_t *far = NULL;
+        ogs_pfcp_urr_t *urr = NULL;
 
         ogs_pfcp_subnet_t *subnet = NULL;
         ogs_pfcp_dev_t *dev = NULL;
@@ -510,6 +514,19 @@ static void _gtpv1_u_recv_cb(short when, ogs_socket_t fd, void *data)
 
         far = pdr->far;
         ogs_assert(far);
+
+        ogs_info("Before urr assert");
+
+        // sess->pfcp.urr_list
+
+        for(int i = 0; i < pdr->num_of_urr; i++){
+            ogs_info("Inside pdr->urr at i = %d", i);
+            urr = pdr->urr[i];
+            ogs_assert(urr);
+        }
+        
+        ogs_info("After urr assert");
+
 
         if (ip_h->ip_v == 4 && sess->ipv4) {
             src_addr = (void *)&ip_h->ip_src.s_addr;

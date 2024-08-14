@@ -678,6 +678,59 @@ void ogs_pfcp_build_update_far_activate(
     }
 }
 
+void ogs_pfcp_build_update_far_volume(
+        ogs_pfcp_tlv_update_far_t *message, int i, ogs_pfcp_far_t *far)
+{
+    ogs_assert(message);
+    ogs_assert(far);
+
+    message->presence = 1;
+    message->far_id.presence = 1;
+    message->far_id.u32 = far->id;
+
+    far->apply_action = OGS_PFCP_APPLY_ACTION_DROP;
+
+    message->apply_action.presence = 1;
+    message->apply_action.u16 = far->apply_action;
+
+    message->update_forwarding_parameters.presence = 1;
+    message->update_forwarding_parameters.destination_interface.presence = 1;
+    message->update_forwarding_parameters.
+        destination_interface.u8 = far->dst_if;
+
+    if (far->dnn) {
+        message->update_forwarding_parameters.network_instance.presence = 1;
+        message->update_forwarding_parameters.network_instance.len =
+            ogs_fqdn_build(farbuf[i].dnn, far->dnn, strlen(far->dnn));
+        message->update_forwarding_parameters.network_instance.data =
+            farbuf[i].dnn;
+    }
+
+    if (far->outer_header_creation_len || far->smreq_flags.value) {
+
+        if (far->outer_header_creation_len) {
+            memcpy(&farbuf[i].outer_header_creation,
+                &far->outer_header_creation, far->outer_header_creation_len);
+            farbuf[i].outer_header_creation.teid =
+                    htobe32(far->outer_header_creation.teid);
+
+            message->update_forwarding_parameters.
+                outer_header_creation.presence = 1;
+            message->update_forwarding_parameters.
+                outer_header_creation.data = &farbuf[i].outer_header_creation;
+            message->update_forwarding_parameters.
+                outer_header_creation.len = far->outer_header_creation_len;
+
+        }
+
+        if (far->smreq_flags.value) {
+            message->update_forwarding_parameters.pfcpsmreq_flags.presence = 1;
+            message->update_forwarding_parameters.pfcpsmreq_flags.u8 =
+                far->smreq_flags.value;
+        }
+    }
+}
+
 static struct {
     ogs_pfcp_volume_threshold_t vol_threshold;
     ogs_pfcp_volume_quota_t vol_quota;

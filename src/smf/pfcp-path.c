@@ -400,6 +400,8 @@ int smf_pfcp_send_modify_list(
 
     xact->local_seid = sess->smf_n4_seid;
 
+    ogs_info("----------- smf_pfcp_send_modify_list -----------");
+
     memset(&h, 0, sizeof(ogs_pfcp_header_t));
     h.type = OGS_PFCP_SESSION_MODIFICATION_REQUEST_TYPE;
     h.seid = sess->upf_n4_seid;
@@ -508,6 +510,8 @@ int smf_5gc_pfcp_send_all_pdr_modification_request(
     ogs_pfcp_xact_t *xact = NULL;
     ogs_pfcp_pdr_t *pdr = NULL;
 
+    ogs_info("_______________ smf_5gc_pfcp_send_all_pdr_modification_request ________________");
+
     ogs_assert(sess);
     if ((flags & OGS_PFCP_MODIFY_ERROR_INDICATION) == 0)
         ogs_assert(stream);
@@ -545,6 +549,7 @@ int smf_5gc_pfcp_send_qos_flow_list_modification_request(
 {
     int rv;
     ogs_pfcp_xact_t *xact = NULL;
+    ogs_info("_____________________________ smf_5gc_pfcp_send_qos_flow_list_modification_request _____________________________");
 
     ogs_assert(sess);
 
@@ -702,6 +707,8 @@ int smf_epc_pfcp_send_all_pdr_modification_request(
     ogs_pfcp_xact_t *xact = NULL;
     ogs_pfcp_pdr_t *pdr = NULL;
 
+    ogs_info("_______________ smf_epc_pfcp_send_all_pdr_modification_request ________________");
+
     ogs_assert(sess);
 
     xact = ogs_pfcp_xact_local_create(
@@ -744,6 +751,8 @@ int smf_epc_pfcp_send_one_bearer_modification_request(
     int rv;
     ogs_pfcp_xact_t *xact = NULL;
     smf_sess_t *sess = NULL;
+
+    ogs_info("_____________________________ smf_epc_pfcp_send_one_bearer_modification_request _____________________________");
 
     ogs_assert(bearer);
     sess = smf_sess_find_by_id(bearer->sess_id);

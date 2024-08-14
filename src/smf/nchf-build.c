@@ -278,27 +278,3 @@ ogs_sbi_request_t *smf_nchf_build_report(smf_sess_t *sess, void *data){
 
     return request;
 }
-
-// bool smf_nchf_build_and_send(ogs_sbi_service_type_e service_type,
-//         ogs_sbi_request_t *(*build)(smf_sess_t *sess, void *data),
-//         smf_sess_t *sess, int state, void *data)
-// {
-//     ogs_info("@@@@@@@@@@@@ nchf-build.c: smf_nchf_build_and_send() @@@@@@@@@@@@");
-
-//     ogs_sbi_xact_t *xact = NULL;
-//     ogs_sbi_nf_instance_t *nf_instance = NULL;
-
-//     nf_instance = ogs_sbi_nf_instance_find_by_service_type(service_type, OpenAPI_nf_type_CHF);
-
-//     xact = ogs_sbi_xact_add(
-//             sess->id, &sess->sbi, service_type, NULL,
-//             (ogs_sbi_build_f)build, sess, data);
-//     if (!xact) {
-//         ogs_error("smf_sbi_discover_and_send() failed");
-//         return OGS_ERROR;
-//     }
-
-//     xact->state = state;
-
-//     return smf_sbi_send_request(nf_instance, xact);
-// }

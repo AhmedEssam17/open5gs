@@ -683,8 +683,6 @@ void upf_sess_urr_acc_add(upf_sess_t *sess, ogs_pfcp_urr_t *urr, size_t size, bo
     upf_sess_urr_acc_t *urr_acc = &sess->urr_acc[urr->id];
     uint64_t vol, ulvol, dlvol;
 
-    ogs_info("Inside upf_sess_urr_acc_add ");
-
     /* Increment total & ul octets + pkts */
     urr_acc->total_octets += size;
     urr_acc->total_pkts++;
@@ -704,19 +702,14 @@ void upf_sess_urr_acc_add(upf_sess_t *sess, ogs_pfcp_urr_t *urr, size_t size, bo
     dlvol = urr_acc->dl_octets;
     ulvol = urr_acc->ul_octets;
 
-    ogs_info("dlvol = %ld", urr_acc->dl_octets);
-    ogs_info("ulvol = %ld", urr_acc->ul_octets);
-
     /* generate report if volume threshold/quota is reached */
     vol = urr_acc->total_octets - urr_acc->last_report.total_octets;
-    ogs_info("Inside upf_sess_urr_acc_add before if %d ",urr->rep_triggers.start_of_traffic);
     // ogs_info("vol = %ld ||||| totalVol = %ld", vol , urr->vol_threshold.total_volume);
     if ((urr->rep_triggers.volume_quota && urr->vol_quota.tovol && vol >= urr->vol_quota.total_volume) ||
         (urr->rep_triggers.volume_threshold && urr->vol_threshold.tovol && vol >= urr->vol_threshold.total_volume) ||
         (urr->rep_triggers.volume_threshold && urr->vol_threshold.dlvol && dlvol >= urr->vol_threshold.downlink_volume) ||
         (urr->rep_triggers.volume_threshold && urr->vol_threshold.ulvol && ulvol >= urr->vol_threshold.uplink_volume) ||
         (urr->rep_triggers.start_of_traffic && sess->start_of_traffic_flag == 0)) {
-        ogs_info("Inside upf_sess_urr_acc_add inside if");
         
         ogs_pfcp_user_plane_report_t report;
         memset(&report, 0, sizeof(report));
@@ -725,7 +718,6 @@ void upf_sess_urr_acc_add(upf_sess_t *sess, ogs_pfcp_urr_t *urr, size_t size, bo
         sess->start_of_traffic_flag = 1;
         upf_sess_urr_acc_snapshot(sess, urr);
 
-        ogs_info("XXXXXvoid upf_sess_urr_acc_add(upf_sess_t *sess, ogs_pfcp_urr_t *urr, size_t size, bool is_uplink)>> upf_pfcp_send_session_report_request(sess, &report));XXXXX");
         ogs_assert(OGS_OK ==
             upf_pfcp_send_session_report_request(sess, &report));
         /* Start new report period/iteration: */

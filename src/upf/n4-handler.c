@@ -40,15 +40,15 @@ static void upf_n4_handle_create_urr(upf_sess_t *sess, ogs_pfcp_tlv_create_urr_t
         ogs_info("URR %d >> %d", urr->id, urr->meas_method);
 
         /* TODO: enable counters somewhere else if ISTM not set, upon first pkt received */
-        if (urr->meas_info.istm) {
-            ogs_info("::::::urr->meas_info.istm:::::::");
+        // if (urr->meas_info.istm) {
+        //     ogs_info("::::::urr->meas_info.istm:::::::");
+        //     upf_sess_urr_acc_timers_setup(sess, urr);
+        // }
+
+        if (urr->meas_info.mnop) {
+            ogs_info("::::::urr->meas_info.mnop:::::::");
             upf_sess_urr_acc_timers_setup(sess, urr);
         }
-
-        // if (urr->meas_info.mnop) {
-        //     ogs_info("::::::urr->meas_info.mnop:::::::");
-        //     // upf_sess_urr_acc_timers_setup(sess, urr);
-        // }
     }
 }
 
@@ -294,6 +294,7 @@ void upf_n4_handle_session_modification_request(
         goto cleanup;
 
     for (i = 0; i < OGS_MAX_NUM_OF_FAR; i++) {
+        ogs_info("------------------ ogs_pfcp_handle_update_far_flags ------------------");
         if (ogs_pfcp_handle_update_far_flags(&sess->pfcp, &req->update_far[i],
                     &cause_value, &offending_ie_value) == NULL)
             break;
@@ -334,6 +335,7 @@ void upf_n4_handle_session_modification_request(
         goto cleanup;
 
     for (i = 0; i < OGS_MAX_NUM_OF_URR; i++) {
+        ogs_info("inside upf-n4-handler URR id = %d", i);
         if (ogs_pfcp_handle_update_urr(&sess->pfcp, &req->update_urr[i],
                     &cause_value, &offending_ie_value) == NULL)
             break;

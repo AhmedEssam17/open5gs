@@ -436,6 +436,7 @@ bool smf_nsmf_handle_update_sm_context(
     }
 
     if (SmContextUpdateData->n1_sm_msg) {
+        ogs_info("*****nsmf-handler.c: lw fe N1-sm-msg *****");
         n1SmMsg = SmContextUpdateData->n1_sm_msg;
         if (!n1SmMsg || !n1SmMsg->content_id) {
             ogs_error("[%s:%d] No n1SmMsg", smf_ue->supi, sess->psi);
@@ -471,7 +472,7 @@ bool smf_nsmf_handle_update_sm_context(
         return true;
     
     } else if (SmContextUpdateData->n2_sm_info) {
-
+        ogs_info("*****nsmf-handler.c: lw fe N2-sm-msg *****");
         /*********************************************************
          * Handle ACTIVATED
          ********************************************************/
@@ -542,6 +543,7 @@ bool smf_nsmf_handle_update_sm_context(
                 smf_sbi_send_sm_context_updated_data_up_cnx_state(
                         sess, stream, OpenAPI_up_cnx_state_DEACTIVATED);
             } else {
+                ogs_info("___________ smf_nsmf_handle_update_sm_context : 545 ________________");
                 ogs_assert(OGS_OK ==
                     smf_5gc_pfcp_send_all_pdr_modification_request(
                         sess, stream,
@@ -550,7 +552,7 @@ bool smf_nsmf_handle_update_sm_context(
 
         } else if (SmContextUpdateData->up_cnx_state ==
                 OpenAPI_up_cnx_state_ACTIVATING) {
-
+                    ogs_info("*****nsmf-handler.c: lw fe OpenAPI_up_cnx_state_ACTIVATING *****");
         /*********************************************************
          * Handle ACTIVATING
          ********************************************************/
@@ -684,8 +686,9 @@ bool smf_nsmf_handle_update_sm_context(
                 }
                 dl_far->handover.prepared = false;
             }
-
+            ogs_info("___________ smf_nsmf_handle_update_sm_context : 688 ________________");
             if (far_update) {
+                ogs_info("___________ smf_nsmf_handle_update_sm_context : 690 ________________");
                 ogs_assert(OGS_OK ==
                     smf_5gc_pfcp_send_all_pdr_modification_request(
                         sess, stream,
@@ -719,6 +722,7 @@ bool smf_nsmf_handle_update_sm_context(
             }
 
             if (smf_sess_have_indirect_data_forwarding(sess) == true) {
+                ogs_info("___________ smf_nsmf_handle_update_sm_context : 724 ________________");
                 ogs_assert(OGS_OK ==
                     smf_5gc_pfcp_send_all_pdr_modification_request(
                         sess, stream,

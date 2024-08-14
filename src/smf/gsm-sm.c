@@ -632,7 +632,10 @@ void smf_gsm_state_wait_5gc_sm_policy_association(ogs_fsm_t *s, smf_event_t *e)
             break;
         
         CASE(OGS_SBI_SERVICE_NAME_NCHF_CONVERGEDCHARGING)
+        /* hena ben3ml handle lel recive message ele gya mn el CHF b3d ma 3mlnalo discover  */
+        /* sbi_message = el message ele rg3a men el CHF b3d el discover w abl el stablishment request */
             // ogs_info(">>>>>>>> sbi_message <<<<<<<<")
+
             ogs_info("OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING in smf_gsm_state_wait_5gc_sm_policy_association");
             if(smf_nchf_handle_get(sess, state, sbi_message)){
                 ogs_info("$$$$$$$$$$$$$$ Returned true from smf_nchf_handle_get $$$$$$$$$$$$$$");
@@ -946,15 +949,13 @@ void smf_gsm_state_operational(ogs_fsm_t *s, smf_event_t *e)
                OGS_FSM_TRAN(s, smf_gsm_state_wait_pfcp_deletion);
             }
             else {
-                if(  sess->pfcp_report_request->usage_report[0].usage_report_trigger.u24 & (1 << 20 )  || 
-                     sess->pfcp_report_request->usage_report[0].usage_report_trigger.u24 & (1 << 17 )      )
+                if( sess->pfcp_report_request->usage_report[0].usage_report_trigger.u24 & (1 << 20 ) || 
+                    sess->pfcp_report_request->usage_report[0].usage_report_trigger.u24 & (1 << 17 ))
                  {
                     smf_sbi_discover_and_send(
                                     OGS_SBI_SERVICE_TYPE_NCHF_CONVERGEDCHARGING, NULL,
                                     smf_nchf_build_report, sess, NULL, 0, NULL);
                  }
-
-            
             }
 
             break;
@@ -1003,6 +1004,7 @@ void smf_gsm_state_operational(ogs_fsm_t *s, smf_event_t *e)
         CASE(OGS_SBI_SERVICE_NAME_NSMF_PDUSESSION)
             SWITCH(sbi_message->h.resource.component[2])
             CASE(OGS_SBI_RESOURCE_NAME_MODIFY)
+                ogs_info("___---_____---___ uri: %s __----__---___",sbi_message->h.uri);
                 smf_nsmf_handle_update_sm_context(sess, stream, sbi_message);
                 break;
             CASE(OGS_SBI_RESOURCE_NAME_RELEASE)
@@ -1041,6 +1043,11 @@ void smf_gsm_state_operational(ogs_fsm_t *s, smf_event_t *e)
         SWITCH(sbi_message->h.service.name)
         CASE(OGS_SBI_SERVICE_NAME_NCHF_CONVERGEDCHARGING)
             ogs_info("OGS_SBI_SERVICE_NAME_NCHF_CONVERGEDCHARGING -- sbi");
+            OpenAPI_multiple_unit_information_t *test_multiple = (OpenAPI_multiple_unit_information_t *)sbi_message->ChargingDataResponse->multiple_unit_information->last->data;
+            ogs_info(">>>>>>>>>>>>>>>>>>> ChargingDataResponse final_unit_action -> %s <<<<<<<<<<<<<<<<<<", test_multiple->final_unit_indication->final_unit_action);
+            if(strcmp(test_multiple->final_unit_indication->final_unit_action, "TERMINATE") == 0){
+                ogs_assert(OGS_OK == smf_5gc_pfcp_send_session_deletion_request(sess, NULL, 1));
+            }
             break;
 
         CASE(OGS_SBI_SERVICE_NAME_NPCF_SMPOLICYCONTROL)
@@ -1283,6 +1290,7 @@ void smf_gsm_state_operational(ogs_fsm_t *s, smf_event_t *e)
 
         switch (e->ngap.type) {
         case OpenAPI_n2_sm_info_type_PDU_RES_SETUP_RSP:
+                ogs_info("*****gsm-state : ngap_handle_pdu_session_resource_setup_response_transfer *****");
             rv = ngap_handle_pdu_session_resource_setup_response_transfer(
                     sess, stream, pkbuf);
             if (rv != OGS_OK) {
@@ -1791,6 +1799,7 @@ void smf_gsm_state_wait_5gc_n1_n2_release(ogs_fsm_t *s, smf_event_t *e)
         CASE(OGS_SBI_SERVICE_NAME_NSMF_PDUSESSION)
             SWITCH(sbi_message->h.resource.component[2])
             CASE(OGS_SBI_RESOURCE_NAME_MODIFY)
+                ogs_info("___________ gsm-sm: meen bynady smf_nsmf_handle_update_sm_context  : 1802 n1n2release ________________");
                 smf_nsmf_handle_update_sm_context(sess, stream, sbi_message);
                 break;
             CASE(OGS_SBI_RESOURCE_NAME_RELEASE)

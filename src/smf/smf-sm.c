@@ -819,6 +819,8 @@ void smf_state_operational(ogs_fsm_t *s, smf_event_t *e)
             break;
 
         CASE(OGS_SBI_SERVICE_NAME_NCHF_CONVERGEDCHARGING)
+       
+
         CASE(OGS_SBI_SERVICE_NAME_NUDM_SDM)
         CASE(OGS_SBI_SERVICE_NAME_NPCF_SMPOLICYCONTROL)
         CASE(OGS_SBI_SERVICE_NAME_NAMF_COMM)
@@ -838,12 +840,15 @@ void smf_state_operational(ogs_fsm_t *s, smf_event_t *e)
             sbi_object_id = sbi_xact->sbi_object_id;
             ogs_assert(sbi_object_id >= OGS_MIN_POOL_ID &&
                     sbi_object_id <= OGS_MAX_POOL_ID);
-
+        
             if (sbi_xact->assoc_stream_id >= OGS_MIN_POOL_ID &&
                 sbi_xact->assoc_stream_id <= OGS_MAX_POOL_ID)
-                e->h.sbi.data = OGS_UINT_TO_POINTER(sbi_xact->assoc_stream_id);
+              e->h.sbi.data = OGS_UINT_TO_POINTER(sbi_xact->assoc_stream_id);
 
+                
+            
             e->h.sbi.state = sbi_xact->state;
+            ogs_info("Service name = %s ====> h.sbi.state = %d", sbi_message.h.service.name, e->h.sbi.state);
 
             ogs_sbi_xact_remove(sbi_xact);
 
@@ -865,6 +870,8 @@ void smf_state_operational(ogs_fsm_t *s, smf_event_t *e)
         CASE(OGS_SBI_SERVICE_NAME_NUDM_UECM)
             int state = 0;
             bool unknown_res_status = false;
+
+            ogs_info("$!@!@$!@#@#$@$#^@# OGS_SBI_SERVICE_NAME_NUDM_UECM $!@!@$!@#@#$@$#^@#");
 
             sbi_xact_id = OGS_POINTER_TO_UINT(e->h.sbi.data);
             ogs_assert(sbi_xact_id >= OGS_MIN_POOL_ID &&
